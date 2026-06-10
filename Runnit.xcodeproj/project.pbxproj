@@ -31,6 +31,7 @@
 		D92B822446224DD16B5110DD /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59A878D595112417D9CF7644 /* ProfileView.swift */; };
 		E6E61705F5EF0CFD6FA3473D /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CF35940A4E1C3C56D0AD87A /* KeychainHelper.swift */; };
 		F2C81CA364DA9C9FC6AA7096 /* PlansView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5114D6F1B22AC76F0F94AB0 /* PlansView.swift */; };
+		F1E2D3C4B5A6F7E8D9C0B1A2 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E1F2 /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +61,7 @@
 		D689A91C15E934948AE759CC /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		DE219DE7A8ABD35E722DA6E6 /* Plan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plan.swift; sourceTree = "<group>"; };
 		FBC657A3DC86D1E0904E0B89 /* RunnitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnitApp.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6A7B8C9D0E1F2 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -84,6 +86,7 @@
 			isa = PBXGroup;
 			children = (
 				C434987E34DB9E65F9F5B88A /* Info.plist */,
+				A1B2C3D4E5F6A7B8C9D0E1F2 /* PrivacyInfo.xcprivacy */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -209,12 +212,24 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXResourcesBuildPhase section */
+		B1A2C3D4E5F6B7A8C9D0E1F2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F1E2D3C4B5A6F7E8D9C0B1A2 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXNativeTarget section */
 		8431A2C1E2804688BD8CA6D7 /* Runnit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = E6769F2872DF977CD0820CA4 /* Build configuration list for PBXNativeTarget "Runnit" */;
 			buildPhases = (
 				58E5C5FCDDDE313E98615C94 /* Sources */,
+				B1A2C3D4E5F6B7A8C9D0E1F2 /* Resources */,
 			);
 			buildRules = (
 			);
