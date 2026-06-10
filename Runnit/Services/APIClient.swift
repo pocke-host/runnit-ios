@@ -136,14 +136,21 @@ extension JSONDecoder {
         d.keyDecodingStrategy = .convertFromSnakeCase
         d.dateDecodingStrategy = .custom { decoder in
             let str = try decoder.singleValueContainer().decode(String.self)
-            // Try ISO8601 with fractional seconds first, then without
-            let fmts: [ISO8601DateFormatter] = [
+            // ISO8601 with timezone (Instant fields)
+            let isoFmts: [ISO8601DateFormatter] = [
                 { let f = ISO8601DateFormatter(); f.formatOptions = [.withInternetDateTime, .withFractionalSeconds]; return f }(),
                 { let f = ISO8601DateFormatter(); f.formatOptions = [.withInternetDateTime]; return f }(),
             ]
-            for fmt in fmts {
+            for fmt in isoFmts {
                 if let date = fmt.date(from: str) { return date }
             }
+            // LocalDateTime from Spring (no timezone offset) — treat as UTC
+            let localFmt = DateFormatter()
+            localFmt.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+            localFmt.locale = Locale(identifier: "en_US_POSIX")
+            localFmt.timeZone = TimeZone(secondsFromGMT: 0)
+            if let date = localFmt.date(from: str) { return date }
+
             throw DecodingError.dataCorruptedError(in: try decoder.singleValueContainer(), debugDescription: "Cannot parse date: \(str)")
         }
         return d
