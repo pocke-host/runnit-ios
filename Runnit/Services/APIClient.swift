@@ -24,7 +24,7 @@ final class APIClient {
     static let shared = APIClient()
 
     #if DEBUG
-    private let baseURL = "https://ati-runnit-java.onrender.com/api"
+    private let baseURL = "http://localhost:8080/api"
     #else
     private let baseURL = "https://ati-runnit-java.onrender.com/api"
     #endif

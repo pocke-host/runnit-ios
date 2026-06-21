@@ -5,6 +5,7 @@ struct CommentsView: View {
     @StateObject private var service = CommentService()
     @State private var newComment = ""
     @State private var isPosting = false
+    @State private var errorMessage: String?
     @FocusState private var inputFocused: Bool
 
     var body: some View {
@@ -60,7 +61,15 @@ struct CommentsView: View {
         }
         .navigationTitle("Comments")
         .navigationBarTitleDisplayMode(.inline)
-        .task { try? await service.fetchComments(activityId: activityId) }
+        .task {
+            do { try await service.fetchComments(activityId: activityId) }
+            catch { errorMessage = error.localizedDescription }
+        }
+        .alert("Error", isPresented: .init(get: { errorMessage != nil }, set: { _ in errorMessage = nil })) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(errorMessage ?? "")
+        }
     }
 
     private var canPost: Bool {
@@ -74,7 +83,11 @@ struct CommentsView: View {
         newComment = ""
         inputFocused = false
         Task {
-            _ = try? await service.postComment(activityId: activityId, content: text)
+            do {
+                _ = try await service.postComment(activityId: activityId, content: text)
+            } catch {
+                errorMessage = error.localizedDescription
+            }
             isPosting = false
         }
     }
