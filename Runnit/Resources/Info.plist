@@ -35,6 +35,12 @@
 	<string>Runnit uses your location to track your runs and routes.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Runnit uses your location to track your runs and routes.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Runnit uses your camera to capture Workout Moments.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Runnit saves your Workout Moment photos to your library.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Runnit saves your Workout Moment photos to your library.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>

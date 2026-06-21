@@ -3,8 +3,11 @@ import SwiftUI
 struct ProfileView: View {
     @EnvironmentObject var auth: AuthService
     @StateObject private var activityService = ActivityService.shared
+    @StateObject private var strava = StravaService.shared
     @State private var showEditProfile = false
     @State private var showLogoutConfirm = false
+    @State private var stravaError: String?
+    @State private var syncMessage: String?
 
     var body: some View {
         NavigationStack {
@@ -89,6 +92,41 @@ struct ProfileView: View {
                             }
                         }
 
+                        // Connected Apps
+                        VStack(alignment: .leading, spacing: 0) {
+                            Divider().padding(.top, 20)
+
+                            Text("CONNECTED APPS")
+                                .font(.system(size: 11, weight: .bold))
+                                .tracking(2)
+                                .foregroundStyle(.secondary)
+                                .padding(.horizontal, 20)
+                                .padding(.top, 20)
+                                .padding(.bottom, 12)
+
+                            StravaRow(
+                                strava: strava,
+                                errorMessage: $stravaError,
+                                syncMessage: $syncMessage
+                            )
+                            .padding(.horizontal, 20)
+
+                            if let msg = syncMessage {
+                                Text(msg)
+                                    .font(.system(size: 12))
+                                    .foregroundStyle(.secondary)
+                                    .padding(.horizontal, 20)
+                                    .padding(.top, 6)
+                            }
+                            if let err = stravaError {
+                                Text(err)
+                                    .font(.system(size: 12))
+                                    .foregroundStyle(.red)
+                                    .padding(.horizontal, 20)
+                                    .padding(.top, 6)
+                            }
+                        }
+
                         // Settings section
                         VStack(spacing: 0) {
                             Divider().padding(.top, 20)
@@ -117,7 +155,111 @@ struct ProfileView: View {
                 Button("Log Out", role: .destructive) { auth.logout() }
                 Button("Cancel", role: .cancel) {}
             }
-            .task { try? await activityService.fetchMyActivities() }
+            .task {
+                async let _ = activityService.fetchMyActivities()
+                async let _ = strava.fetchStatus()
+            }
+        }
+    }
+}
+
+// MARK: - StravaRow
+
+struct StravaRow: View {
+    @ObservedObject var strava: StravaService
+    @Binding var errorMessage: String?
+    @Binding var syncMessage: String?
+    @Environment(\.openURL) private var openURL
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "bolt.fill")
+                .font(.system(size: 18))
+                .foregroundStyle(Color.orange)
+                .frame(width: 32)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Strava")
+                    .font(.system(size: 15, weight: .semibold))
+                Text(strava.status?.connected == true ? "Connected" : "Not connected")
+                    .font(.system(size: 12))
+                    .foregroundStyle(strava.status?.connected == true ? Color.green : Color(.systemGray))
+            }
+
+            Spacer()
+
+            if strava.isLoading {
+                ProgressView().frame(width: 60)
+            } else if strava.status?.connected == true {
+                HStack(spacing: 8) {
+                    Button(action: syncStrava) {
+                        if strava.isSyncing {
+                            ProgressView().frame(width: 44)
+                        } else {
+                            Text("Sync")
+                                .font(.system(size: 13, weight: .medium))
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 6)
+                                .overlay(RoundedRectangle(cornerRadius: 6).stroke(Color(.systemGray3)))
+                        }
+                    }
+                    .disabled(strava.isSyncing)
+
+                    Button(action: disconnectStrava) {
+                        Text("Disconnect")
+                            .font(.system(size: 13, weight: .medium))
+                            .foregroundStyle(.red)
+                    }
+                }
+            } else {
+                Button(action: connectStrava) {
+                    Text("Connect")
+                        .font(.system(size: 13, weight: .semibold))
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 6)
+                        .background(.black)
+                        .foregroundStyle(.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 6))
+                }
+            }
+        }
+        .padding(.vertical, 8)
+    }
+
+    private func connectStrava() {
+        errorMessage = nil
+        Task {
+            do {
+                let url = try await strava.connectURL()
+                openURL(url)
+                // Refresh status when user returns — handled by onReceive scenePhase in RunnitApp
+            } catch {
+                errorMessage = "Could not start Strava connection."
+            }
+        }
+    }
+
+    private func syncStrava() {
+        errorMessage = nil
+        syncMessage = nil
+        Task {
+            do {
+                let count = try await strava.sync()
+                syncMessage = "\(count) activit\(count == 1 ? "y" : "ies") imported"
+            } catch {
+                errorMessage = "Sync failed. Try again."
+            }
+        }
+    }
+
+    private func disconnectStrava() {
+        errorMessage = nil
+        Task {
+            do {
+                try await strava.disconnect()
+            } catch {
+                errorMessage = "Could not disconnect Strava."
+            }
         }
     }
 }

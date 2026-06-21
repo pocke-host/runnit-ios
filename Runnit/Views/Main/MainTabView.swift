@@ -9,21 +9,24 @@ struct MainTabView: View {
                 .tabItem { Label("Feed", systemImage: "house") }
                 .tag(0)
 
+            DiscoverView()
+                .tabItem { Label("Discover", systemImage: "magnifyingglass") }
+                .tag(1)
+
             TrackView()
                 .tabItem { Label("Track", systemImage: "record.circle") }
-                .tag(1)
+                .tag(2)
 
             PlansView()
                 .tabItem { Label("Plans", systemImage: "calendar") }
-                .tag(2)
+                .tag(3)
 
             ProfileView()
                 .tabItem { Label("Profile", systemImage: "person") }
-                .tag(3)
+                .tag(4)
         }
         .tint(.black)
         .onAppear {
-            // Black tab bar to match web design system
             let appearance = UITabBarAppearance()
             appearance.configureWithOpaqueBackground()
             appearance.backgroundColor = .white
