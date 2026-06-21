@@ -28,11 +28,15 @@ final class PushNotificationService: NSObject, ObservableObject {
     func registerDeviceToken(_ tokenData: Data) async {
         let token = tokenData.map { String(format: "%02.2hhx", $0) }.joined()
         struct Body: Encodable { let token: String; let platform: String }
-        try? await api.requestVoid(
-            "/users/me/push-token",
-            method: "POST",
-            body: Body(token: token, platform: "ios")
-        )
+        do {
+            try await api.requestVoid(
+                "/users/me/push-token",
+                method: "POST",
+                body: Body(token: token, platform: "ios")
+            )
+        } catch {
+            print("[PushNotification] Failed to register device token: \(error.localizedDescription)")
+        }
     }
 }
 

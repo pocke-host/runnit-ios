@@ -3,6 +3,7 @@ import SwiftUI
 struct PlansView: View {
     @StateObject private var service = PlanService.shared
     @State private var selectedPlan: Plan?
+    @State private var errorMessage: String?
 
     var body: some View {
         NavigationStack {
@@ -29,11 +30,22 @@ struct PlansView: View {
                         }
                     }
                     .listStyle(.insetGrouped)
-                    .refreshable { try? await service.fetchPlans() }
+                    .refreshable {
+                        do { try await service.fetchPlans() }
+                        catch { errorMessage = error.localizedDescription }
+                    }
                 }
             }
             .navigationTitle("Training Plans")
-            .task { try? await service.fetchPlans() }
+            .task {
+                do { try await service.fetchPlans() }
+                catch { errorMessage = error.localizedDescription }
+            }
+            .alert("Error", isPresented: .init(get: { errorMessage != nil }, set: { _ in errorMessage = nil })) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(errorMessage ?? "")
+            }
         }
     }
 }

@@ -20,15 +20,36 @@ struct FeedView: View {
                             }
                             .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
                             .listRowSeparator(.hidden)
+                            .onAppear {
+                                if activity.id == service.feed.last?.id {
+                                    Task { try? await service.fetchMoreFeed() }
+                                }
+                            }
+                        }
+                        if service.isLoading {
+                            ProgressView()
+                                .frame(maxWidth: .infinity)
+                                .listRowSeparator(.hidden)
                         }
                     }
                     .listStyle(.plain)
-                    .refreshable { try? await service.fetchFeed() }
+                    .refreshable {
+                        do { try await service.fetchFeed() }
+                        catch { errorMessage = error.localizedDescription }
+                    }
                 }
             }
             .navigationTitle("Feed")
             .navigationBarTitleDisplayMode(.large)
-            .task { try? await service.fetchFeed() }
+            .task {
+                do { try await service.fetchFeed() }
+                catch { errorMessage = error.localizedDescription }
+            }
+            .alert("Error", isPresented: .init(get: { errorMessage != nil }, set: { _ in errorMessage = nil })) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(errorMessage ?? "")
+            }
         }
     }
 }

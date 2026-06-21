@@ -21,13 +21,19 @@ enum DeepLinkHandler {
 
         guard let code, let state else { return }
 
-        // Post to backend callback endpoint — the backend already handles state verification
+        // POST to mobile-callback endpoint with code + state in body (not URL params)
         let provider = url.pathComponents.dropFirst().first ?? ""
+        struct OAuthBody: Encodable { let code: String; let state: String }
         Task {
-            try? await APIClient.shared.requestVoid(
-                "/integrations/\(provider)/callback?code=\(code)&state=\(state)",
-                method: "GET"
-            )
+            do {
+                try await APIClient.shared.requestVoid(
+                    "/integrations/\(provider)/mobile-callback",
+                    method: "POST",
+                    body: OAuthBody(code: code, state: state)
+                )
+            } catch {
+                print("[DeepLink] OAuth callback failed for \(provider): \(error.localizedDescription)")
+            }
         }
     }
 }

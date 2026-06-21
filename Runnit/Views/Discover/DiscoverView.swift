@@ -4,6 +4,7 @@ struct DiscoverView: View {
     @StateObject private var service = UserService.shared
     @State private var query = ""
     @State private var searchTask: Task<Void, Never>?
+    @State private var errorMessage: String?
 
     var body: some View {
         NavigationStack {
@@ -62,6 +63,11 @@ struct DiscoverView: View {
             }
             .navigationTitle("Discover")
             .navigationBarTitleDisplayMode(.large)
+            .alert("Error", isPresented: .init(get: { errorMessage != nil }, set: { _ in errorMessage = nil })) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(errorMessage ?? "")
+            }
         }
     }
 
@@ -74,7 +80,11 @@ struct DiscoverView: View {
         searchTask = Task {
             try? await Task.sleep(for: .milliseconds(350))
             guard !Task.isCancelled else { return }
-            try? await service.searchUsers(query: q)
+            do {
+                try await service.searchUsers(query: q)
+            } catch {
+                errorMessage = error.localizedDescription
+            }
         }
     }
 }

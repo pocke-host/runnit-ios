@@ -9,11 +9,14 @@ struct ActivityDetailView: View {
     @State private var localUserReaction: String?
     @State private var isReacting = false
     @State private var showComments = false
+    @State private var errorMessage: String?
 
     var body: some View {
         Group {
             if isLoading {
                 ProgressView()
+            } else if errorMessage != nil {
+                ContentUnavailableView("Failed to load activity", systemImage: "exclamationmark.triangle", description: Text(errorMessage ?? ""))
             } else if let a = activity {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 0) {
@@ -125,9 +128,13 @@ struct ActivityDetailView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .task {
-            activity = try? await ActivityService.shared.fetchActivity(id: activityId)
-            localReactionCount = activity?.reactionCount ?? 0
-            localUserReaction = activity?.userReaction
+            do {
+                activity = try await ActivityService.shared.fetchActivity(id: activityId)
+                localReactionCount = activity?.reactionCount ?? 0
+                localUserReaction = activity?.userReaction
+            } catch {
+                errorMessage = error.localizedDescription
+            }
             isLoading = false
         }
     }
