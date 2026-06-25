@@ -13,6 +13,7 @@ struct User: Codable, Identifiable {
     let role: String?
     let isPublic: Bool?
     let onboardingComplete: Bool?
+    let archetype: String?
 
     var usesImperial: Bool { unitSystem == "imperial" }
     var avatarURL: URL? { avatarUrl.flatMap(URL.init) }
