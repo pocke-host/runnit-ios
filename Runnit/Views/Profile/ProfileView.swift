@@ -1,5 +1,15 @@
 import SwiftUI
 
+// MARK: - Archetype response
+
+private struct ArchetypeResponse: Decodable {
+    let archetype: String
+    let label: String
+    let tagline: String
+}
+
+// MARK: - ProfileView
+
 struct ProfileView: View {
     @EnvironmentObject var auth: AuthService
     @StateObject private var activityService = ActivityService.shared
@@ -8,6 +18,7 @@ struct ProfileView: View {
     @State private var showLogoutConfirm = false
     @State private var stravaError: String?
     @State private var syncMessage: String?
+    @State private var archetypeResponse: ArchetypeResponse?
 
     var body: some View {
         NavigationStack {
@@ -53,6 +64,26 @@ struct ProfileView: View {
                                         .font(.system(size: 12))
                                         .foregroundStyle(.secondary)
                                 }
+                            }
+
+                            // Archetype badge — only shown for the logged-in user's own profile
+                            if let resp = archetypeResponse {
+                                VStack(spacing: 6) {
+                                    Text(resp.label.uppercased())
+                                        .font(.system(size: 11, weight: .black))
+                                        .tracking(2)
+                                        .padding(.horizontal, 14)
+                                        .padding(.vertical, 6)
+                                        .background(Color.white)
+                                        .foregroundStyle(.black)
+                                        .clipShape(RoundedRectangle(cornerRadius: 6))
+
+                                    Text(resp.tagline)
+                                        .font(.system(size: 12))
+                                        .foregroundStyle(Color(.systemGray3))
+                                        .multilineTextAlignment(.center)
+                                }
+                                .padding(.top, 4)
                             }
                         }
                         .frame(maxWidth: .infinity)
@@ -158,6 +189,11 @@ struct ProfileView: View {
             .task {
                 async let _ = activityService.fetchMyActivities()
                 async let _ = strava.fetchStatus()
+                do {
+                    archetypeResponse = try await APIClient.shared.request("/users/me/archetype")
+                } catch {
+                    // Archetype is non-critical; silently skip if unavailable
+                }
             }
         }
     }
