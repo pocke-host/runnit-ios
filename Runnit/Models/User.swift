@@ -14,7 +14,10 @@ struct User: Codable, Identifiable {
     let isPublic: Bool?
     let onboardingComplete: Bool?
     let archetype: String?
+    let subscriptionStatus: String?
+    let subscriptionTier: String?
 
     var usesImperial: Bool { unitSystem == "imperial" }
     var avatarURL: URL? { avatarUrl.flatMap(URL.init) }
+    var isPremium: Bool { subscriptionStatus == "active" || subscriptionStatus == "trialing" }
 }
