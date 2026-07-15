@@ -81,6 +81,8 @@ final class LocationService: NSObject, ObservableObject, CLLocationManagerDelega
             heartRateAvg: nil,
             calories: estimateCalories(),
             date: dateStr,
+            source: nil,
+            externalId: nil,
             routePoints: points
         )
     }

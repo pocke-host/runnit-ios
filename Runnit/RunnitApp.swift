@@ -7,6 +7,7 @@ struct RunnitApp: App {
     @StateObject private var auth = AuthService.shared
     @StateObject private var push = PushNotificationService.shared
     @StateObject private var purchases = PurchaseService.shared
+    @StateObject private var healthKit = HealthKitService.shared
     @Environment(\.scenePhase) private var scenePhase
 
     init() {
@@ -19,6 +20,7 @@ struct RunnitApp: App {
             ContentView()
                 .environmentObject(auth)
                 .environmentObject(purchases)
+                .environmentObject(healthKit)
                 .onOpenURL { url in
                     DeepLinkHandler.handle(url)
                 }
@@ -34,6 +36,11 @@ struct RunnitApp: App {
                             if let userId = auth.currentUser.map({ String($0.id) }) {
                                 await purchases.login(userId: userId)
                             }
+                            let granted = await healthKit.requestAuthorization()
+                            if granted {
+                                healthKit.startBackgroundObserver()
+                                await healthKit.syncWorkouts()
+                            }
                         }
                     } else {
                         Task { await purchases.logout() }
@@ -44,6 +51,7 @@ struct RunnitApp: App {
                         Task {
                             try? await StravaService.shared.fetchStatus()
                             await purchases.refreshCustomerInfo()
+                            await healthKit.syncWorkouts()
                         }
                     }
                 }
