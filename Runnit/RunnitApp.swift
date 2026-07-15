@@ -49,7 +49,6 @@ struct RunnitApp: App {
                 .onChange(of: scenePhase) { _, phase in
                     if phase == .active && auth.isLoggedIn {
                         Task {
-                            try? await StravaService.shared.fetchStatus()
                             await purchases.refreshCustomerInfo()
                             await healthKit.syncWorkouts()
                         }
