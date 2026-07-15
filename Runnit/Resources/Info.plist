@@ -41,9 +41,14 @@
 	<string>Runnit saves your Workout Moment photos to your library.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Runnit saves your Workout Moment photos to your library.</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Runnit reads your workouts from Apple Health to automatically log your training sessions.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>Runnit syncs your workout data with Apple Health.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>
+		<string>healthkit</string>
 	</array>
 	<key>UILaunchScreen</key>
 	<dict>
