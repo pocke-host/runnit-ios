@@ -20,6 +20,10 @@ struct Activity: Codable, Identifiable {
     let reactionCount: Int?
     let commentCount: Int?
     let userReaction: String?
+    let listeningTrack: String?
+    let listeningArtist: String?
+    let listeningProvider: String?
+    let listeningUrl: String?
 
     struct RoutePoint: Codable {
         let lat: Double
@@ -40,7 +44,7 @@ struct Activity: Codable, Identifiable {
     }
 
     private enum CodingKeys: String, CodingKey {
-        case id, notes, calories, userReaction
+        case id, notes, calories, userReaction, listeningTrack, listeningArtist, listeningProvider, listeningUrl
         case user
         case sportType
         case durationSeconds
@@ -64,6 +68,10 @@ struct Activity: Codable, Identifiable {
         paceSecondsPerKm = try c.decodeIfPresent(Double.self, forKey: .averagePace)
         heartRateAvg    = try c.decodeIfPresent(Int.self, forKey: .averageHeartRate)
         userReaction    = try c.decodeIfPresent(String.self, forKey: .userReaction)
+        listeningTrack  = try c.decodeIfPresent(String.self, forKey: .listeningTrack)
+        listeningArtist = try c.decodeIfPresent(String.self, forKey: .listeningArtist)
+        listeningProvider = try c.decodeIfPresent(String.self, forKey: .listeningProvider)
+        listeningUrl    = try c.decodeIfPresent(String.self, forKey: .listeningUrl)
         commentCount    = try c.decodeIfPresent(Int.self, forKey: .commentCount)
 
         // Backend sends Int meters — cast to Double for display math
@@ -127,6 +135,10 @@ struct CreateActivityBody: Encodable {
     let calories: Int?
     let date: String
     let routePoints: [RoutePointBody]?
+    let listeningTrack: String?
+    let listeningArtist: String?
+    let listeningProvider: String?
+    let listeningUrl: String?
 
     struct RoutePointBody: Encodable {
         let lat: Double

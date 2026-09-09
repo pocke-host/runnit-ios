@@ -66,7 +66,7 @@ final class LocationService: NSObject, ObservableObject, CLLocationManagerDelega
 
     // MARK: - Build save body
 
-    func buildActivityBody(type: String, title: String?) -> CreateActivityBody {
+    func buildActivityBody(type: String, title: String?, listeningTrack: SpotifyTrack? = nil) -> CreateActivityBody {
         let dateStr = ISO8601DateFormatter().string(from: sessionStart ?? Date())
         let points = trackPoints.map {
             CreateActivityBody.RoutePointBody(lat: $0.coordinate.latitude, lng: $0.coordinate.longitude, ele: $0.altitude)
@@ -81,7 +81,11 @@ final class LocationService: NSObject, ObservableObject, CLLocationManagerDelega
             heartRateAvg: nil,
             calories: estimateCalories(),
             date: dateStr,
-            routePoints: points
+            routePoints: points,
+            listeningTrack: listeningTrack?.name,
+            listeningArtist: listeningTrack?.artist,
+            listeningProvider: listeningTrack == nil ? nil : "SPOTIFY",
+            listeningUrl: listeningTrack?.externalUrl
         )
     }
 

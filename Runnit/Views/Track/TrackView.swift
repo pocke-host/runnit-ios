@@ -133,9 +133,9 @@ struct TrackView: View {
         }
     }
 
-    private func saveActivity(title: String?) async {
+    private func saveActivity(title: String?, listeningTrack: SpotifyTrack?) async {
         isSaving = true
-        let body = location.buildActivityBody(type: selectedType, title: title)
+        let body = location.buildActivityBody(type: selectedType, title: title, listeningTrack: listeningTrack)
         do {
             let saved = try await activityService.createActivity(body)
             activityService.feed.insert(saved, at: 0)
@@ -191,10 +191,12 @@ struct SaveActivitySheet: View {
     let location: LocationService
     let type: String
     @Binding var isSaving: Bool
-    let onSave: (String?) async -> Void
+    let onSave: (String?, SpotifyTrack?) async -> Void
     let onDiscard: () -> Void
 
     @State private var title = ""
+    @State private var selectedTrack: SpotifyTrack?
+    @State private var showSpotifyPicker = false
     @Environment(\.dismiss) var dismiss
 
     var body: some View {
@@ -210,7 +212,24 @@ struct SaveActivitySheet: View {
                 RunnitTextField(label: "TITLE (OPTIONAL)", text: $title)
                     .padding(.horizontal)
 
-                Button(action: { Task { await onSave(title.isEmpty ? nil : title) }}) {
+                Button {
+                    showSpotifyPicker = true
+                } label: {
+                    HStack {
+                        Image(systemName: "music.note")
+                        Text(selectedTrack.map { "\($0.name) · \($0.artist)" } ?? "ADD WHAT YOU LISTENED TO")
+                            .lineLimit(1)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                    }
+                    .padding(14)
+                    .foregroundStyle(.primary)
+                    .background(Color(.systemGray6))
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                }
+                .padding(.horizontal)
+
+                Button(action: { Task { await onSave(title.isEmpty ? nil : title, selectedTrack) }}) {
                     ZStack {
                         if isSaving { ProgressView().tint(.white) }
                         else { Text("SAVE RUN").font(.system(size: 13, weight: .semibold)).tracking(2) }
@@ -228,6 +247,9 @@ struct SaveActivitySheet: View {
             }
             .navigationTitle("Save Activity")
             .navigationBarTitleDisplayMode(.inline)
+            .sheet(isPresented: $showSpotifyPicker) {
+                SpotifyPickerView(selectedTrack: $selectedTrack)
+            }
         }
     }
 
