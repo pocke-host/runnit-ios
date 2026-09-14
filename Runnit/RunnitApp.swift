@@ -7,6 +7,7 @@ struct RunnitApp: App {
     @StateObject private var auth = AuthService.shared
     @StateObject private var push = PushNotificationService.shared
     @StateObject private var purchases = PurchaseService.shared
+    @StateObject private var coros = CorosService.shared
     @Environment(\.scenePhase) private var scenePhase
 
     init() {
@@ -43,6 +44,7 @@ struct RunnitApp: App {
                     if phase == .active && auth.isLoggedIn {
                         Task {
                             try? await StravaService.shared.fetchStatus()
+                            await CorosService.shared.fetchStatus()
                             await purchases.refreshCustomerInfo()
                         }
                     }

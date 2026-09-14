@@ -8,61 +8,116 @@
 
 /* Begin PBXBuildFile section */
 		0652532DA156A5BC9627E520 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E4BF2EF822ADB80583E4F9 /* APIClient.swift */; };
+		06C78DA647E3CA15E1D60EB8 /* PushNotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A887341DAA0BE121701A37 /* PushNotificationService.swift */; };
 		08BA68EAFE61593DFD0ACACE /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787B86CD75AF1B61993C06DE /* MainTabView.swift */; };
 		1245B12E56F6347DB0E7370B /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F285D6F68AC542F22D9EE2 /* LoginView.swift */; };
+		14F6E8F091BC5C74EB0347BE /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 8CDF82E068A0F3EC67715A67 /* PrivacyInfo.xcprivacy */; };
 		152A71624E4010BA0D57F9C1 /* ActivityDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 528269CFCA1ABA3000C9D642 /* ActivityDetailView.swift */; };
+		15F09CB7D2DEAEC68602D2ED /* CorosService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A34E6D025AA40F7DE70068 /* CorosService.swift */; };
 		1B464BD856BE5A20906EF124 /* PlanDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0A5B8FEA982B8BFAEDED57F /* PlanDetailView.swift */; };
+		1EAC9BD35E226D86039115FE /* CommentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5331FAF9959EBE3A46173848 /* CommentsView.swift */; };
 		23BBB52467FD4163BF2E0392 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DD0443090ED294767F5399D /* AuthService.swift */; };
+		30D1F1B46A6511CC33674B09 /* SpotifyPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F68EB0E4CCC5CE2EEF2CDE1 /* SpotifyPickerView.swift */; };
 		3C966B06BDE7F174C7601C24 /* DeepLinkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B5B0784B02BAF287D08C771 /* DeepLinkHandler.swift */; };
 		45068BF0C5A1A7A98090383C /* ActivityCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A29697BC700A15C39DC73C8 /* ActivityCard.swift */; };
+		50A44DF9BFA6C4397D371421 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60143D92721745AA366E3544 /* UserService.swift */; };
+		5180413032AF71665AFA0A39 /* CreateMomentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB972D877B3946D1C8C234A /* CreateMomentView.swift */; };
+		53E25CD73D2F57C6940FAEFB /* PurchaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41DFCB749CA0F40F6CC92CEB /* PurchaseService.swift */; };
 		55615B412CB10702607920F8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B8855BBB42DF5393A2C4E4 /* ContentView.swift */; };
+		63BB43742C17F389737831C8 /* CreateStoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91EA95A090C926B78C37978 /* CreateStoryView.swift */; };
 		6A131FD3BC1E849250B0B394 /* TrackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7BA3804AC9C3C6CD3BEDD47 /* TrackView.swift */; };
 		7303E7B2716393AAF92E2BC2 /* RunnitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC657A3DC86D1E0904E0B89 /* RunnitApp.swift */; };
 		875C34BADD27269975274372 /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF8F94799661FA07C2115ED /* SplashView.swift */; };
+		880D162C54A0F1DD3DF55AA1 /* CameraPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91BCDA53233F6CD39E4CE83A /* CameraPickerView.swift */; };
 		89089EDAE63BB3A4A6FACEFF /* RunnitTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A398CB040927BEC1E2BA2635 /* RunnitTextField.swift */; };
 		8AADE3E7FB56E7F0DFE0A5F6 /* PlanService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8263C4AAC0BAAC82DA7E9C3C /* PlanService.swift */; };
 		93E2E380469DDC268BE562D6 /* ActivityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EDA923D2123556E642637C5 /* ActivityService.swift */; };
+		9494E2A1036A2A182B6AF9C9 /* ClubDiscoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4CCA5AFFD43C0F61EDF44BC /* ClubDiscoveryView.swift */; };
 		98A1B9DF30D6DB6EDF9C2CC7 /* FeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CAB99703A898D0F392E353 /* FeedView.swift */; };
 		9C08936F71FE7C709432292D /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D689A91C15E934948AE759CC /* LocationService.swift */; };
 		A497D7AB802936AA526F0C08 /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C0984597771DE35A563FC /* RegisterView.swift */; };
 		A760AB15D25A626284496260 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33AE1354622564ABEAD4C4D3 /* User.swift */; };
+		A7BDA44B5DEF7512EF0C850D /* ClubService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5AF2431275E20DBDF22669 /* ClubService.swift */; };
+		A9F95F972880AA6969EFFAFF /* EventService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E50E364FE4E5C8292CDF4F1 /* EventService.swift */; };
+		AD65889D069BC7BF62A6A2A6 /* MediaUploadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09149D5827E21173E0311285 /* MediaUploadService.swift */; };
 		B21C279EC23A442766ACCC45 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 645FB23EA6BE69E0E5FA95C1 /* Activity.swift */; };
 		B42AF62D288EC784F21F67BB /* Plan.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE219DE7A8ABD35E722DA6E6 /* Plan.swift */; };
+		BB3BD471CFC7C1C09FC78714 /* HealthKitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D76E90296F72BE56BE9A3D /* HealthKitService.swift */; };
+		C1D66E8DB80B3A6C43CA3B82 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2199E957CE9184479D826A85 /* OnboardingView.swift */; };
+		C4830F9C350F022F1CDC5B23 /* EventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4D6B1251189A10E2103025 /* EventsView.swift */; };
+		C788C1D90E958BA392BCF4F7 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 032316396456C388EC291944 /* PaywallView.swift */; };
+		C93160547C3E1D8C46BB0374 /* SpotifySearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E036AE4694F848B1B9A1B831 /* SpotifySearchService.swift */; };
+		CFA49B9091C3E84695E8C6E6 /* StravaService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0F114BAE53411316BEC8B2 /* StravaService.swift */; };
 		D92B822446224DD16B5110DD /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59A878D595112417D9CF7644 /* ProfileView.swift */; };
+		E162016A42053494638F1C04 /* CommentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC4E4156966CD6293F7B7C3 /* CommentService.swift */; };
 		E6E61705F5EF0CFD6FA3473D /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CF35940A4E1C3C56D0AD87A /* KeychainHelper.swift */; };
+		EA02C3FE13CED0918BFAE3D4 /* DiscoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A017A5984BE11A79316B31 /* DiscoverView.swift */; };
+		EF90E03C6C735F2BC75F7524 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = 1E9DBBADAB101D498BDD6837 /* RevenueCat */; };
 		F2C81CA364DA9C9FC6AA7096 /* PlansView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5114D6F1B22AC76F0F94AB0 /* PlansView.swift */; };
-		F1E2D3C4B5A6F7E8D9C0B1A2 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E1F2 /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		032316396456C388EC291944 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
 		06E4BF2EF822ADB80583E4F9 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
+		09149D5827E21173E0311285 /* MediaUploadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaUploadService.swift; sourceTree = "<group>"; };
 		1DD0443090ED294767F5399D /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		2199E957CE9184479D826A85 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		25A34E6D025AA40F7DE70068 /* CorosService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorosService.swift; sourceTree = "<group>"; };
 		2B5B0784B02BAF287D08C771 /* DeepLinkHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLinkHandler.swift; sourceTree = "<group>"; };
 		2CF8F94799661FA07C2115ED /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
 		33AE1354622564ABEAD4C4D3 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		40D76E90296F72BE56BE9A3D /* HealthKitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitService.swift; sourceTree = "<group>"; };
+		41DFCB749CA0F40F6CC92CEB /* PurchaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseService.swift; sourceTree = "<group>"; };
 		45F285D6F68AC542F22D9EE2 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		47CAB99703A898D0F392E353 /* FeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedView.swift; sourceTree = "<group>"; };
 		528269CFCA1ABA3000C9D642 /* ActivityDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityDetailView.swift; sourceTree = "<group>"; };
+		5331FAF9959EBE3A46173848 /* CommentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsView.swift; sourceTree = "<group>"; };
 		59A878D595112417D9CF7644 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		60143D92721745AA366E3544 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		645FB23EA6BE69E0E5FA95C1 /* Activity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Activity.swift; sourceTree = "<group>"; };
 		6CF35940A4E1C3C56D0AD87A /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
+		6E50E364FE4E5C8292CDF4F1 /* EventService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventService.swift; sourceTree = "<group>"; };
+		6F68EB0E4CCC5CE2EEF2CDE1 /* SpotifyPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyPickerView.swift; sourceTree = "<group>"; };
 		750348C8A177F344EADE3839 /* Runnit.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Runnit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		787B86CD75AF1B61993C06DE /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		78A017A5984BE11A79316B31 /* DiscoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverView.swift; sourceTree = "<group>"; };
+		78A887341DAA0BE121701A37 /* PushNotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationService.swift; sourceTree = "<group>"; };
 		8263C4AAC0BAAC82DA7E9C3C /* PlanService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanService.swift; sourceTree = "<group>"; };
 		8A29697BC700A15C39DC73C8 /* ActivityCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCard.swift; sourceTree = "<group>"; };
 		8B5C0984597771DE35A563FC /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
+		8CDF82E068A0F3EC67715A67 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		8EDA923D2123556E642637C5 /* ActivityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityService.swift; sourceTree = "<group>"; };
+		91BCDA53233F6CD39E4CE83A /* CameraPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPickerView.swift; sourceTree = "<group>"; };
+		9B5AF2431275E20DBDF22669 /* ClubService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubService.swift; sourceTree = "<group>"; };
 		A0A5B8FEA982B8BFAEDED57F /* PlanDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanDetailView.swift; sourceTree = "<group>"; };
 		A398CB040927BEC1E2BA2635 /* RunnitTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnitTextField.swift; sourceTree = "<group>"; };
 		B2B8855BBB42DF5393A2C4E4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		B5114D6F1B22AC76F0F94AB0 /* PlansView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlansView.swift; sourceTree = "<group>"; };
 		B7BA3804AC9C3C6CD3BEDD47 /* TrackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackView.swift; sourceTree = "<group>"; };
+		BCB972D877B3946D1C8C234A /* CreateMomentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateMomentView.swift; sourceTree = "<group>"; };
+		BEC4E4156966CD6293F7B7C3 /* CommentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentService.swift; sourceTree = "<group>"; };
 		C434987E34DB9E65F9F5B88A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		C91EA95A090C926B78C37978 /* CreateStoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateStoryView.swift; sourceTree = "<group>"; };
+		D4CCA5AFFD43C0F61EDF44BC /* ClubDiscoveryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubDiscoveryView.swift; sourceTree = "<group>"; };
 		D689A91C15E934948AE759CC /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
+		DC0F114BAE53411316BEC8B2 /* StravaService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StravaService.swift; sourceTree = "<group>"; };
 		DE219DE7A8ABD35E722DA6E6 /* Plan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plan.swift; sourceTree = "<group>"; };
+		E036AE4694F848B1B9A1B831 /* SpotifySearchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifySearchService.swift; sourceTree = "<group>"; };
+		F658E14B5479B06BEA56C885 /* Runnit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runnit.entitlements; sourceTree = "<group>"; };
+		FB4D6B1251189A10E2103025 /* EventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsView.swift; sourceTree = "<group>"; };
 		FBC657A3DC86D1E0904E0B89 /* RunnitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnitApp.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F6A7B8C9D0E1F2 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		661361023F663D2F7EA47501 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF90E03C6C735F2BC75F7524 /* RevenueCat in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		042C81B53E6CDE939C00A75D /* Profile */ = {
@@ -73,11 +128,29 @@
 			path = Profile;
 			sourceTree = "<group>";
 		};
+		0BCD34632085A9506BAB6F07 /* Stories */ = {
+			isa = PBXGroup;
+			children = (
+				C91EA95A090C926B78C37978 /* CreateStoryView.swift */,
+			);
+			path = Stories;
+			sourceTree = "<group>";
+		};
+		0EDFA523298FBC281D6143C6 /* Subscription */ = {
+			isa = PBXGroup;
+			children = (
+				032316396456C388EC291944 /* PaywallView.swift */,
+			);
+			path = Subscription;
+			sourceTree = "<group>";
+		};
 		2F047F28EDCC7F6ADA2307D8 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				91BCDA53233F6CD39E4CE83A /* CameraPickerView.swift */,
 				A398CB040927BEC1E2BA2635 /* RunnitTextField.swift */,
 				2CF8F94799661FA07C2115ED /* SplashView.swift */,
+				6F68EB0E4CCC5CE2EEF2CDE1 /* SpotifyPickerView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -86,7 +159,7 @@
 			isa = PBXGroup;
 			children = (
 				C434987E34DB9E65F9F5B88A /* Info.plist */,
-				A1B2C3D4E5F6A7B8C9D0E1F2 /* PrivacyInfo.xcprivacy */,
+				8CDF82E068A0F3EC67715A67 /* PrivacyInfo.xcprivacy */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -96,9 +169,26 @@
 			children = (
 				8A29697BC700A15C39DC73C8 /* ActivityCard.swift */,
 				528269CFCA1ABA3000C9D642 /* ActivityDetailView.swift */,
+				5331FAF9959EBE3A46173848 /* CommentsView.swift */,
 				47CAB99703A898D0F392E353 /* FeedView.swift */,
 			);
 			path = Feed;
+			sourceTree = "<group>";
+		};
+		4FF1B6BDBAB61BD1D12B8CE8 /* Moments */ = {
+			isa = PBXGroup;
+			children = (
+				BCB972D877B3946D1C8C234A /* CreateMomentView.swift */,
+			);
+			path = Moments;
+			sourceTree = "<group>";
+		};
+		51283123B1BAB51DC8D6CE51 /* Events */ = {
+			isa = PBXGroup;
+			children = (
+				FB4D6B1251189A10E2103025 /* EventsView.swift */,
+			);
+			path = Events;
 			sourceTree = "<group>";
 		};
 		561AA3F2640D86EDE07C47CB /* Auth */ = {
@@ -110,10 +200,27 @@
 			path = Auth;
 			sourceTree = "<group>";
 		};
+		561F1B0D6E5B12070B289CF2 /* Discover */ = {
+			isa = PBXGroup;
+			children = (
+				78A017A5984BE11A79316B31 /* DiscoverView.swift */,
+			);
+			path = Discover;
+			sourceTree = "<group>";
+		};
+		589B8BEAC1D8CFD1E2ADE9EE /* Clubs */ = {
+			isa = PBXGroup;
+			children = (
+				D4CCA5AFFD43C0F61EDF44BC /* ClubDiscoveryView.swift */,
+			);
+			path = Clubs;
+			sourceTree = "<group>";
+		};
 		6BA869E136C582777445DBC5 /* Runnit */ = {
 			isa = PBXGroup;
 			children = (
 				B2B8855BBB42DF5393A2C4E4 /* ContentView.swift */,
+				F658E14B5479B06BEA56C885 /* Runnit.entitlements */,
 				FBC657A3DC86D1E0904E0B89 /* RunnitApp.swift */,
 				E764599B4F2C6048D3A752CD /* Models */,
 				371EF47483C4959F130ED1EF /* Resources */,
@@ -130,10 +237,29 @@
 				8EDA923D2123556E642637C5 /* ActivityService.swift */,
 				06E4BF2EF822ADB80583E4F9 /* APIClient.swift */,
 				1DD0443090ED294767F5399D /* AuthService.swift */,
+				9B5AF2431275E20DBDF22669 /* ClubService.swift */,
+				BEC4E4156966CD6293F7B7C3 /* CommentService.swift */,
+				25A34E6D025AA40F7DE70068 /* CorosService.swift */,
+				6E50E364FE4E5C8292CDF4F1 /* EventService.swift */,
+				40D76E90296F72BE56BE9A3D /* HealthKitService.swift */,
 				D689A91C15E934948AE759CC /* LocationService.swift */,
+				09149D5827E21173E0311285 /* MediaUploadService.swift */,
 				8263C4AAC0BAAC82DA7E9C3C /* PlanService.swift */,
+				41DFCB749CA0F40F6CC92CEB /* PurchaseService.swift */,
+				78A887341DAA0BE121701A37 /* PushNotificationService.swift */,
+				E036AE4694F848B1B9A1B831 /* SpotifySearchService.swift */,
+				DC0F114BAE53411316BEC8B2 /* StravaService.swift */,
+				60143D92721745AA366E3544 /* UserService.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		74136D7504BDAF3822D868E2 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				2199E957CE9184479D826A85 /* OnboardingView.swift */,
+			);
+			path = Onboarding;
 			sourceTree = "<group>";
 		};
 		924BD8C28EEC0550171F28FC /* Utilities */ = {
@@ -200,11 +326,18 @@
 			isa = PBXGroup;
 			children = (
 				561AA3F2640D86EDE07C47CB /* Auth */,
+				589B8BEAC1D8CFD1E2ADE9EE /* Clubs */,
 				2F047F28EDCC7F6ADA2307D8 /* Components */,
+				561F1B0D6E5B12070B289CF2 /* Discover */,
+				51283123B1BAB51DC8D6CE51 /* Events */,
 				41AE1A4B531A77E184453081 /* Feed */,
 				D966FDCE078EC22CCADB07AD /* Main */,
+				4FF1B6BDBAB61BD1D12B8CE8 /* Moments */,
+				74136D7504BDAF3822D868E2 /* Onboarding */,
 				D822A23E0E0B5C620EE87D7F /* Plans */,
 				042C81B53E6CDE939C00A75D /* Profile */,
+				0BCD34632085A9506BAB6F07 /* Stories */,
+				0EDFA523298FBC281D6143C6 /* Subscription */,
 				9DDEA2A006F5BD99A8CE4982 /* Track */,
 			);
 			path = Views;
@@ -212,24 +345,14 @@
 		};
 /* End PBXGroup section */
 
-/* Begin PBXResourcesBuildPhase section */
-		B1A2C3D4E5F6B7A8C9D0E1F2 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				F1E2D3C4B5A6F7E8D9C0B1A2 /* PrivacyInfo.xcprivacy in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXResourcesBuildPhase section */
-
 /* Begin PBXNativeTarget section */
 		8431A2C1E2804688BD8CA6D7 /* Runnit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = E6769F2872DF977CD0820CA4 /* Build configuration list for PBXNativeTarget "Runnit" */;
 			buildPhases = (
 				58E5C5FCDDDE313E98615C94 /* Sources */,
-				B1A2C3D4E5F6B7A8C9D0E1F2 /* Resources */,
+				81199D3AA22085E26CFD46C2 /* Resources */,
+				661361023F663D2F7EA47501 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -237,6 +360,7 @@
 			);
 			name = Runnit;
 			packageProductDependencies = (
+				1E9DBBADAB101D498BDD6837 /* RevenueCat */,
 			);
 			productName = Runnit;
 			productReference = 750348C8A177F344EADE3839 /* Runnit.app */;
@@ -265,6 +389,9 @@
 			);
 			mainGroup = E100B2B375E66942C76D3DD5;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				40D48E0B1C8BE8981033C84F /* XCRemoteSwiftPackageReference "purchases-ios-spm" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A339D1BE382C2E4BF6D6C915 /* Products */;
 			projectDirPath = "";
@@ -274,6 +401,17 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		81199D3AA22085E26CFD46C2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				14F6E8F091BC5C74EB0347BE /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		58E5C5FCDDDE313E98615C94 /* Sources */ = {
@@ -286,24 +424,45 @@
 				152A71624E4010BA0D57F9C1 /* ActivityDetailView.swift in Sources */,
 				93E2E380469DDC268BE562D6 /* ActivityService.swift in Sources */,
 				23BBB52467FD4163BF2E0392 /* AuthService.swift in Sources */,
+				880D162C54A0F1DD3DF55AA1 /* CameraPickerView.swift in Sources */,
+				9494E2A1036A2A182B6AF9C9 /* ClubDiscoveryView.swift in Sources */,
+				A7BDA44B5DEF7512EF0C850D /* ClubService.swift in Sources */,
+				E162016A42053494638F1C04 /* CommentService.swift in Sources */,
+				1EAC9BD35E226D86039115FE /* CommentsView.swift in Sources */,
 				55615B412CB10702607920F8 /* ContentView.swift in Sources */,
+				15F09CB7D2DEAEC68602D2ED /* CorosService.swift in Sources */,
+				5180413032AF71665AFA0A39 /* CreateMomentView.swift in Sources */,
+				63BB43742C17F389737831C8 /* CreateStoryView.swift in Sources */,
 				3C966B06BDE7F174C7601C24 /* DeepLinkHandler.swift in Sources */,
+				EA02C3FE13CED0918BFAE3D4 /* DiscoverView.swift in Sources */,
+				A9F95F972880AA6969EFFAFF /* EventService.swift in Sources */,
+				C4830F9C350F022F1CDC5B23 /* EventsView.swift in Sources */,
 				98A1B9DF30D6DB6EDF9C2CC7 /* FeedView.swift in Sources */,
+				BB3BD471CFC7C1C09FC78714 /* HealthKitService.swift in Sources */,
 				E6E61705F5EF0CFD6FA3473D /* KeychainHelper.swift in Sources */,
 				9C08936F71FE7C709432292D /* LocationService.swift in Sources */,
 				1245B12E56F6347DB0E7370B /* LoginView.swift in Sources */,
 				08BA68EAFE61593DFD0ACACE /* MainTabView.swift in Sources */,
+				AD65889D069BC7BF62A6A2A6 /* MediaUploadService.swift in Sources */,
+				C1D66E8DB80B3A6C43CA3B82 /* OnboardingView.swift in Sources */,
+				C788C1D90E958BA392BCF4F7 /* PaywallView.swift in Sources */,
 				B42AF62D288EC784F21F67BB /* Plan.swift in Sources */,
 				1B464BD856BE5A20906EF124 /* PlanDetailView.swift in Sources */,
 				8AADE3E7FB56E7F0DFE0A5F6 /* PlanService.swift in Sources */,
 				F2C81CA364DA9C9FC6AA7096 /* PlansView.swift in Sources */,
 				D92B822446224DD16B5110DD /* ProfileView.swift in Sources */,
+				53E25CD73D2F57C6940FAEFB /* PurchaseService.swift in Sources */,
+				06C78DA647E3CA15E1D60EB8 /* PushNotificationService.swift in Sources */,
 				A497D7AB802936AA526F0C08 /* RegisterView.swift in Sources */,
 				7303E7B2716393AAF92E2BC2 /* RunnitApp.swift in Sources */,
 				89089EDAE63BB3A4A6FACEFF /* RunnitTextField.swift in Sources */,
 				875C34BADD27269975274372 /* SplashView.swift in Sources */,
+				30D1F1B46A6511CC33674B09 /* SpotifyPickerView.swift in Sources */,
+				C93160547C3E1D8C46BB0374 /* SpotifySearchService.swift in Sources */,
+				CFA49B9091C3E84695E8C6E6 /* StravaService.swift in Sources */,
 				6A131FD3BC1E849250B0B394 /* TrackView.swift in Sources */,
 				A760AB15D25A626284496260 /* User.swift in Sources */,
+				50A44DF9BFA6C4397D371421 /* UserService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -314,6 +473,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Runnit/Runnit.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = Runnit/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -397,6 +557,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Runnit/Runnit.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = Runnit/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -491,6 +652,25 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		40D48E0B1C8BE8981033C84F /* XCRemoteSwiftPackageReference "purchases-ios-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RevenueCat/purchases-ios-spm.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1E9DBBADAB101D498BDD6837 /* RevenueCat */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 40D48E0B1C8BE8981033C84F /* XCRemoteSwiftPackageReference "purchases-ios-spm" */;
+			productName = RevenueCat;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = F85E1A50692D8FB3BEE4747F /* Project object */;
 }

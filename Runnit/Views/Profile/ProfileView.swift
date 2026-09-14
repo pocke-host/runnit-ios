@@ -14,10 +14,16 @@ struct ProfileView: View {
     @EnvironmentObject var auth: AuthService
     @StateObject private var activityService = ActivityService.shared
     @StateObject private var strava = StravaService.shared
+    @StateObject private var coros = CorosService.shared
+    @StateObject private var healthKit = HealthKitService.shared
     @State private var showEditProfile = false
     @State private var showLogoutConfirm = false
     @State private var stravaError: String?
     @State private var syncMessage: String?
+    @State private var corosError: String?
+    @State private var corosSyncMessage: String?
+    @State private var healthError: String?
+    @State private var healthSyncMessage: String?
     @State private var archetypeResponse: ArchetypeResponse?
 
     var body: some View {
@@ -142,6 +148,20 @@ struct ProfileView: View {
                             )
                             .padding(.horizontal, 20)
 
+                            CorosRow(
+                                coros: coros,
+                                errorMessage: $corosError,
+                                syncMessage: $corosSyncMessage
+                            )
+                            .padding(.horizontal, 20)
+
+                            AppleHealthRow(
+                                healthKit: healthKit,
+                                errorMessage: $healthError,
+                                syncMessage: $healthSyncMessage
+                            )
+                            .padding(.horizontal, 20)
+
                             if let msg = syncMessage {
                                 Text(msg)
                                     .font(.system(size: 12))
@@ -189,6 +209,8 @@ struct ProfileView: View {
             .task {
                 async let _ = activityService.fetchMyActivities()
                 async let _ = strava.fetchStatus()
+                async let _ = coros.fetchStatus()
+                async let _ = healthKit.fetchStatus()
                 do {
                     archetypeResponse = try await APIClient.shared.request("/users/me/archetype")
                 } catch {
@@ -196,6 +218,123 @@ struct ProfileView: View {
                 }
             }
         }
+    }
+}
+
+// MARK: - CorosRow
+
+struct CorosRow: View {
+    @ObservedObject var coros: CorosService
+    @Binding var errorMessage: String?
+    @Binding var syncMessage: String?
+    @Environment(\.openURL) private var openURL
+
+    var body: some View {
+        IntegrationRow(
+            icon: "watch.analog",
+            iconColor: .orange,
+            name: "COROS",
+            status: coros.status?.connected == true ? "Connected" : "Not connected",
+            connected: coros.status?.connected == true,
+            isLoading: coros.isLoading,
+            isSyncing: coros.isSyncing,
+            connect: connect,
+            sync: sync,
+            disconnect: disconnect
+        )
+        if let syncMessage { InlineIntegrationMessage(text: syncMessage, color: .secondary) }
+        if let errorMessage { InlineIntegrationMessage(text: errorMessage, color: .red) }
+    }
+
+    private func connect() {
+        errorMessage = nil
+        Task {
+            do { openURL(try await coros.connectURL()) }
+            catch { errorMessage = "Could not start COROS connection." }
+        }
+    }
+    private func sync() {
+        errorMessage = nil
+        Task {
+            do { syncMessage = "\(try await coros.sync()) activities imported" }
+            catch { errorMessage = "COROS sync failed. Try again." }
+        }
+    }
+    private func disconnect() {
+        errorMessage = nil
+        Task { do { try await coros.disconnect() } catch { errorMessage = "Could not disconnect COROS." } }
+    }
+}
+
+// MARK: - AppleHealthRow
+
+struct AppleHealthRow: View {
+    @ObservedObject var healthKit: HealthKitService
+    @Binding var errorMessage: String?
+    @Binding var syncMessage: String?
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "heart.fill").font(.system(size: 18)).foregroundStyle(.red).frame(width: 32)
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Apple Health").font(.system(size: 15, weight: .semibold))
+                Text(healthKit.status?.connected == true ? "Connected" : "Not connected")
+                    .font(.system(size: 12)).foregroundStyle(healthKit.status?.connected == true ? Color.green : Color(.systemGray))
+            }
+            Spacer()
+            if healthKit.isLoading { ProgressView().frame(width: 60) }
+            else if healthKit.status?.connected == true {
+                HStack(spacing: 8) {
+                    Button {
+                        Task { do { syncMessage = "\(try await healthKit.syncRecentWorkouts()) workouts imported" } catch { errorMessage = "Apple Health sync failed. Try again." } }
+                    } label: {
+                        Text(healthKit.isSyncing ? "Syncing…" : "Sync").font(.system(size: 13, weight: .medium)).padding(.horizontal, 12).padding(.vertical, 6).overlay(RoundedRectangle(cornerRadius: 6).stroke(Color(.systemGray3)))
+                    }.disabled(healthKit.isSyncing)
+                    Button("Disconnect", role: .destructive) { Task { do { try await healthKit.disconnect() } catch { errorMessage = "Could not disconnect Apple Health." } } }
+                        .font(.system(size: 13, weight: .medium))
+                }
+            } else {
+                Button("Connect") {
+                    Task { do { syncMessage = "\(try await healthKit.connectAndSync()) workouts imported" } catch { errorMessage = error.localizedDescription } }
+                }.font(.system(size: 13, weight: .semibold)).padding(.horizontal, 14).padding(.vertical, 6).background(.black).foregroundStyle(.white).clipShape(RoundedRectangle(cornerRadius: 6))
+            }
+        }.padding(.vertical, 8)
+        if let syncMessage { InlineIntegrationMessage(text: syncMessage, color: .secondary) }
+        if let errorMessage { InlineIntegrationMessage(text: errorMessage, color: .red) }
+    }
+}
+
+private struct InlineIntegrationMessage: View {
+    let text: String
+    let color: Color
+    var body: some View { Text(text).font(.system(size: 12)).foregroundStyle(color).padding(.top, 4) }
+}
+
+private struct IntegrationRow: View {
+    let icon: String
+    let iconColor: Color
+    let name: String
+    let status: String
+    let connected: Bool
+    let isLoading: Bool
+    let isSyncing: Bool
+    let connect: () -> Void
+    let sync: () -> Void
+    let disconnect: () -> Void
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: icon).font(.system(size: 18)).foregroundStyle(iconColor).frame(width: 32)
+            VStack(alignment: .leading, spacing: 2) { Text(name).font(.system(size: 15, weight: .semibold)); Text(status).font(.system(size: 12)).foregroundStyle(connected ? Color.green : Color(.systemGray)) }
+            Spacer()
+            if isLoading { ProgressView().frame(width: 60) }
+            else if connected {
+                HStack(spacing: 8) {
+                    Button(action: sync) { Text(isSyncing ? "Syncing…" : "Sync").font(.system(size: 13, weight: .medium)).padding(.horizontal, 12).padding(.vertical, 6).overlay(RoundedRectangle(cornerRadius: 6).stroke(Color(.systemGray3))) }.disabled(isSyncing)
+                    Button("Disconnect", role: .destructive, action: disconnect).font(.system(size: 13, weight: .medium))
+                }
+            } else { Button("Connect", action: connect).font(.system(size: 13, weight: .semibold)).padding(.horizontal, 14).padding(.vertical, 6).background(.black).foregroundStyle(.white).clipShape(RoundedRectangle(cornerRadius: 6)) }
+        }.padding(.vertical, 8)
     }
 }
 
