@@ -16,7 +16,7 @@ struct RegisterView: View {
             VStack(spacing: 24) {
                 VStack(spacing: 4) {
                     Text("Create account")
-                        .font(.system(size: 28, weight: .black))
+                        .font(.system(size: 28, weight: .black, design: .rounded))
                     Text("Join the community")
                         .font(.system(size: 14))
                         .foregroundStyle(.secondary)
@@ -33,7 +33,7 @@ struct RegisterView: View {
                 if let error = errorMessage {
                     Text(error)
                         .font(.system(size: 13))
-                        .foregroundStyle(.red)
+                    .foregroundStyle(.red)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
@@ -49,8 +49,9 @@ struct RegisterView: View {
                     }
                     .frame(maxWidth: .infinity)
                     .frame(height: 52)
-                    .background(.black)
-                    .foregroundStyle(.white)
+                        .background(RunnitTheme.signal)
+                        .foregroundStyle(.white)
+                        .clipShape(RoundedRectangle(cornerRadius: RunnitTheme.controlRadius))
                 }
                 .disabled(isLoading || email.isEmpty || password.isEmpty || displayName.isEmpty || username.isEmpty)
             }

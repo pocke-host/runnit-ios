@@ -25,5 +25,8 @@ struct ContentView: View {
             }
         }
         .animation(.easeInOut(duration: 0.3), value: auth.isLoggedIn)
+        .tint(RunnitTheme.signal)
+        .background(RunnitTheme.canvas.ignoresSafeArea())
+        .preferredColorScheme(.light)
     }
 }

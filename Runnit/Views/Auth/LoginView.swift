@@ -14,16 +14,16 @@ struct LoginView: View {
                 // Hero
                 VStack(spacing: 8) {
                     Text("RUNNIT")
-                        .font(.system(size: 48, weight: .black))
+                        .font(.system(size: 48, weight: .black, design: .rounded))
                         .tracking(4)
                     Text("TRAIN SMARTER. RACE FASTER.")
                         .font(.system(size: 11, weight: .medium))
                         .tracking(3)
-                        .foregroundStyle(.white.opacity(0.6))
+                        .foregroundStyle(RunnitTheme.yellow)
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 60)
-                .background(.black)
+                .background(RunnitTheme.ink)
                 .foregroundStyle(.white)
 
                 // Form
@@ -52,8 +52,9 @@ struct LoginView: View {
                         }
                         .frame(maxWidth: .infinity)
                         .frame(height: 52)
-                        .background(.black)
+                        .background(RunnitTheme.signal)
                         .foregroundStyle(.white)
+                        .clipShape(RoundedRectangle(cornerRadius: RunnitTheme.controlRadius))
                     }
                     .disabled(isLoading || email.isEmpty || password.isEmpty)
 
@@ -61,7 +62,7 @@ struct LoginView: View {
                         showRegister = true
                     }
                     .font(.system(size: 13))
-                    .foregroundStyle(.black)
+                    .foregroundStyle(RunnitTheme.ink)
                     .padding(.top, 4)
                 }
                 .padding(24)

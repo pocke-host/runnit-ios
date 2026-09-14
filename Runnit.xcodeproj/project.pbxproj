@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0652532DA156A5BC9627E520 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E4BF2EF822ADB80583E4F9 /* APIClient.swift */; };
+		0653E1205CE3C1B584C14A2C /* RunnitTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AF9006AE778E7D637970E2F /* RunnitTheme.swift */; };
 		06C78DA647E3CA15E1D60EB8 /* PushNotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A887341DAA0BE121701A37 /* PushNotificationService.swift */; };
 		08BA68EAFE61593DFD0ACACE /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787B86CD75AF1B61993C06DE /* MainTabView.swift */; };
 		1245B12E56F6347DB0E7370B /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F285D6F68AC542F22D9EE2 /* LoginView.swift */; };
@@ -73,6 +74,7 @@
 		528269CFCA1ABA3000C9D642 /* ActivityDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityDetailView.swift; sourceTree = "<group>"; };
 		5331FAF9959EBE3A46173848 /* CommentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsView.swift; sourceTree = "<group>"; };
 		59A878D595112417D9CF7644 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		5AF9006AE778E7D637970E2F /* RunnitTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnitTheme.swift; sourceTree = "<group>"; };
 		60143D92721745AA366E3544 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		645FB23EA6BE69E0E5FA95C1 /* Activity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Activity.swift; sourceTree = "<group>"; };
 		6CF35940A4E1C3C56D0AD87A /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
@@ -85,7 +87,7 @@
 		8263C4AAC0BAAC82DA7E9C3C /* PlanService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanService.swift; sourceTree = "<group>"; };
 		8A29697BC700A15C39DC73C8 /* ActivityCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCard.swift; sourceTree = "<group>"; };
 		8B5C0984597771DE35A563FC /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
-		8CDF82E068A0F3EC67715A67 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		8CDF82E068A0F3EC67715A67 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		8EDA923D2123556E642637C5 /* ActivityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityService.swift; sourceTree = "<group>"; };
 		91BCDA53233F6CD39E4CE83A /* CameraPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPickerView.swift; sourceTree = "<group>"; };
 		9B5AF2431275E20DBDF22669 /* ClubService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubService.swift; sourceTree = "<group>"; };
@@ -149,6 +151,7 @@
 			children = (
 				91BCDA53233F6CD39E4CE83A /* CameraPickerView.swift */,
 				A398CB040927BEC1E2BA2635 /* RunnitTextField.swift */,
+				5AF9006AE778E7D637970E2F /* RunnitTheme.swift */,
 				2CF8F94799661FA07C2115ED /* SplashView.swift */,
 				6F68EB0E4CCC5CE2EEF2CDE1 /* SpotifyPickerView.swift */,
 			);
@@ -456,6 +459,7 @@
 				A497D7AB802936AA526F0C08 /* RegisterView.swift in Sources */,
 				7303E7B2716393AAF92E2BC2 /* RunnitApp.swift in Sources */,
 				89089EDAE63BB3A4A6FACEFF /* RunnitTextField.swift in Sources */,
+				0653E1205CE3C1B584C14A2C /* RunnitTheme.swift in Sources */,
 				875C34BADD27269975274372 /* SplashView.swift in Sources */,
 				30D1F1B46A6511CC33674B09 /* SpotifyPickerView.swift in Sources */,
 				C93160547C3E1D8C46BB0374 /* SpotifySearchService.swift in Sources */,

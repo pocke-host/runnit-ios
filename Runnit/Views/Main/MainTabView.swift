@@ -40,11 +40,12 @@ struct MainTabView: View {
                 .tabItem { Label("Profile", systemImage: "person") }
                 .tag(6)
         }
-        .tint(.black)
+        .tint(RunnitTheme.signal)
         .onAppear {
             let appearance = UITabBarAppearance()
             appearance.configureWithOpaqueBackground()
-            appearance.backgroundColor = .white
+            appearance.backgroundColor = UIColor(RunnitTheme.canvas)
+            appearance.shadowColor = UIColor(RunnitTheme.rule)
             UITabBar.appearance().standardAppearance = appearance
             UITabBar.appearance().scrollEdgeAppearance = appearance
         }
@@ -78,7 +79,7 @@ private struct ComposeButton: View {
                 .font(.system(size: 20, weight: .bold))
                 .foregroundStyle(.white)
                 .frame(width: 52, height: 52)
-                .background(Color.black)
+                .background(RunnitTheme.signal)
                 .clipShape(Circle())
                 .shadow(color: .black.opacity(0.25), radius: 8, x: 0, y: 4)
         }
