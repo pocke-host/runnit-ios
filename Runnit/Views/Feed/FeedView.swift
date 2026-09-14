@@ -49,6 +49,9 @@ struct FeedView: View {
                     .padding(20)
                 } else {
                     List {
+                        Section { todayCard }
+                            .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 12, trailing: 16))
+                            .listRowSeparator(.hidden)
                         Section { quoteCard }
                             .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 12, trailing: 16))
                             .listRowSeparator(.hidden)
@@ -125,5 +128,58 @@ struct FeedView: View {
         .padding(16)
         .background(Color.white)
         .overlay(Rectangle().stroke(RunnitTheme.rule))
+    }
+
+    private var todayCard: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(greeting.uppercased())
+                        .font(.system(size: 10, weight: .bold, design: .monospaced))
+                        .tracking(1.4)
+                        .foregroundStyle(RunnitTheme.signal)
+                    Text("What’s your move today?")
+                        .font(.system(size: 24, weight: .black, design: .rounded))
+                        .foregroundStyle(RunnitTheme.ink)
+                    Text("A little movement counts. Start where you are.")
+                        .font(.system(size: 14))
+                        .foregroundStyle(RunnitTheme.muted)
+                }
+                Spacer()
+                Image(systemName: "figure.run")
+                    .font(.system(size: 20, weight: .bold))
+                    .foregroundStyle(RunnitTheme.ink)
+                    .frame(width: 44, height: 44)
+                    .background(RunnitTheme.yellow)
+                    .clipShape(RoundedRectangle(cornerRadius: RunnitTheme.radius))
+            }
+
+            Button(action: onRecord) {
+                HStack {
+                    Image(systemName: "record.circle")
+                    Text("Record an activity")
+                    Spacer()
+                    Image(systemName: "arrow.right")
+                }
+                .font(.system(size: 14, weight: .bold, design: .rounded))
+                .padding(.horizontal, 14)
+                .frame(height: 48)
+                .background(RunnitTheme.signal)
+                .foregroundStyle(.white)
+                .clipShape(RoundedRectangle(cornerRadius: RunnitTheme.radius))
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(18)
+        .background(Color.white)
+        .overlay(Rectangle().stroke(RunnitTheme.rule))
+    }
+
+    private var greeting: String {
+        switch Calendar.current.component(.hour, from: Date()) {
+        case 5..<12: return "Good morning"
+        case 12..<18: return "Good afternoon"
+        default: return "Good evening"
+        }
     }
 }
