@@ -63,10 +63,15 @@ struct MainTabView: View {
 // MARK: - Training hub
 
 private struct TrainingTabView: View {
+    @EnvironmentObject private var auth: AuthService
+    @StateObject private var activityService = ActivityService.shared
+
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
+                    homeHero
+                    dailyFocus
                     VStack(alignment: .leading, spacing: 8) {
                         RunnitSectionLabel(text: "YOUR TRAINING")
                         Text("Build the block.")
@@ -116,9 +121,107 @@ private struct TrainingTabView: View {
                 .padding(20)
             }
             .background(RunnitTheme.canvas)
-            .navigationTitle("Training")
+            .navigationTitle("Home")
             .navigationBarTitleDisplayMode(.large)
+            .task { try? await activityService.fetchMyActivities() }
         }
+    }
+
+    private var homeHero: some View {
+        VStack(alignment: .leading, spacing: 18) {
+            Text(todayLine.uppercased())
+                .font(.system(size: 10, weight: .bold, design: .monospaced))
+                .tracking(1.5)
+                .foregroundStyle(RunnitTheme.yellow.opacity(0.8))
+            Text("\(greeting),\n\(firstName.uppercased()).")
+                .font(.system(size: 32, weight: .black, design: .rounded))
+                .foregroundStyle(.white)
+
+            HStack(spacing: 0) {
+                HomeStat(label: "DISTANCE", value: distanceText)
+                HomeStat(label: "ACTIVITIES", value: "\(activityService.myActivities.count)")
+                HomeStat(label: "STREAK", value: "—")
+            }
+        }
+        .padding(20)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(RunnitTheme.ink)
+    }
+
+    private var dailyFocus: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            RunnitSectionLabel(text: "YOUR DAY IN TRAINING")
+            Text("Keep the momentum moving.")
+                .font(.system(size: 22, weight: .black, design: .rounded))
+                .foregroundStyle(RunnitTheme.ink)
+            Text("No workout is scheduled yet. Start with a plan or record what you do today.")
+                .font(.system(size: 14))
+                .foregroundStyle(RunnitTheme.muted)
+                .fixedSize(horizontal: false, vertical: true)
+            HStack(spacing: 12) {
+                NavigationLink(destination: TrackView()) {
+                    Text("START TODAY’S WORKOUT →")
+                        .font(.system(size: 10, weight: .bold, design: .monospaced))
+                        .tracking(0.8)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 44)
+                        .background(RunnitTheme.signal)
+                        .foregroundStyle(.white)
+                }
+                .buttonStyle(.plain)
+                NavigationLink(destination: PlansView()) {
+                    Text("PLANS")
+                        .font(.system(size: 10, weight: .bold, design: .monospaced))
+                        .tracking(0.8)
+                        .frame(width: 72, height: 44)
+                        .foregroundStyle(RunnitTheme.signal)
+                        .overlay(Rectangle().stroke(RunnitTheme.signal))
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(18)
+        .background(Color.white)
+        .overlay(Rectangle().stroke(RunnitTheme.rule))
+    }
+
+    private var firstName: String {
+        auth.currentUser?.displayName.split(separator: " ").first.map(String.init) ?? "Athlete"
+    }
+
+    private var greeting: String {
+        switch Calendar.current.component(.hour, from: Date()) {
+        case 5..<12: return "Good morning"
+        case 12..<18: return "Good afternoon"
+        default: return "Good evening"
+        }
+    }
+
+    private var todayLine: String {
+        Date.now.formatted(.dateTime.weekday(.wide).month(.wide).day())
+    }
+
+    private var distanceText: String {
+        let meters = activityService.myActivities.compactMap(\.distanceMeters).reduce(0, +)
+        return String(format: "%.1f km", meters / 1000)
+    }
+}
+
+private struct HomeStat: View {
+    let label: String
+    let value: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 5) {
+            Text(label)
+                .font(.system(size: 9, weight: .bold, design: .monospaced))
+                .tracking(0.8)
+                .foregroundStyle(RunnitTheme.canvas.opacity(0.5))
+            Text(value)
+                .font(.system(size: 17, weight: .black, design: .rounded))
+                .foregroundStyle(.white)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 
