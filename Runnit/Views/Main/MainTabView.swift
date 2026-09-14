@@ -12,20 +12,20 @@ struct MainTabView: View {
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            FeedView(onRecord: { selectedTab = 2 })
-                .tabItem { Label("Feed", systemImage: "house") }
+            TrainingTabView()
+                .tabItem { Label("Home", systemImage: "square.grid.2x2.fill") }
                 .tag(0)
 
-            DiscoverView()
-                .tabItem { Label("Discover", systemImage: "magnifyingglass") }
+            FeedView(onRecord: { selectedTab = 2 })
+                .tabItem { Label("Feed", systemImage: "rectangle.stack.fill") }
                 .tag(1)
 
             TrackView()
                 .tabItem { Label("Track", systemImage: "record.circle") }
                 .tag(2)
 
-            TrainingTabView()
-                .tabItem { Label("Training", systemImage: "calendar") }
+            EventsView()
+                .tabItem { Label("Calendar", systemImage: "calendar") }
                 .tag(3)
 
             ProfileView()
@@ -102,6 +102,15 @@ private struct TrainingTabView: View {
                         tint: RunnitTheme.ink
                     ) {
                         ClubDiscoveryView()
+                    }
+
+                    TrainingHubLink(
+                        title: "Find athletes",
+                        subtitle: "Discover people who move like you.",
+                        icon: "person.2",
+                        tint: RunnitTheme.signal
+                    ) {
+                        DiscoverView()
                     }
                 }
                 .padding(20)
