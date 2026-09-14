@@ -31,13 +31,13 @@ struct ActivityDetailView: View {
                             VStack(alignment: .leading, spacing: 4) {
                                 Label(a.activityType.capitalized, systemImage: a.activityIcon)
                                     .font(.system(size: 12))
-                                    .foregroundStyle(.secondary)
+                                    .foregroundStyle(RunnitTheme.signal)
                                 Text(a.title ?? a.activityType.capitalized)
                                     .font(.system(size: 24, weight: .black))
                                 if let date = a.date {
                                     Text(date.formatted(date: .long, time: .shortened))
                                         .font(.system(size: 13))
-                                        .foregroundStyle(.secondary)
+                                        .foregroundStyle(RunnitTheme.muted)
                                 }
                             }
 
@@ -95,7 +95,7 @@ struct ActivityDetailView: View {
                                     if localReactionCount > 0 {
                                         Text("\(localReactionCount) reaction\(localReactionCount == 1 ? "" : "s")")
                                             .font(.system(size: 13))
-                                            .foregroundStyle(.secondary)
+                                            .foregroundStyle(RunnitTheme.muted)
                                             .padding(.leading, 4)
                                     }
                                 }
@@ -109,7 +109,7 @@ struct ActivityDetailView: View {
                                         Text("\(a.commentCount ?? 0) comment\(a.commentCount == 1 ? "" : "s")")
                                         Spacer()
                                         Image(systemName: "chevron.right")
-                                            .foregroundStyle(.secondary)
+                                            .foregroundStyle(RunnitTheme.muted)
                                     }
                                     .font(.system(size: 15))
                                     .foregroundStyle(.primary)
@@ -127,6 +127,7 @@ struct ActivityDetailView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
+        .background(RunnitTheme.canvas)
         .task {
             do {
                 activity = try await ActivityService.shared.fetchActivity(id: activityId)

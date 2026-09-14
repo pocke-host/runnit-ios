@@ -15,6 +15,7 @@ struct PlanDetailView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
+        .background(RunnitTheme.canvas)
         .task {
             plan = try? await PlanService.shared.fetchPlan(id: planId)
             isLoading = false
@@ -37,18 +38,18 @@ struct PlanDetailView: View {
                             .foregroundStyle(.white.opacity(0.7))
                     }
                     Text(plan.title)
-                        .font(.system(size: 28, weight: .black))
-                        .foregroundStyle(.white)
+                        .font(.system(size: 28, weight: .black, design: .rounded))
+                        .foregroundStyle(RunnitTheme.ink)
                     HStack(spacing: 16) {
                         if let goal = plan.goal { Label(goal, systemImage: "flag").font(.system(size: 13)) }
                         if let weeks = plan.weeks { Label("\(weeks) wks", systemImage: "calendar").font(.system(size: 13)) }
                         if let level = plan.level { Label(level, systemImage: "chart.bar").font(.system(size: 13)) }
                     }
-                    .foregroundStyle(.white.opacity(0.8))
+                    .foregroundStyle(RunnitTheme.ink.opacity(0.72))
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(20)
-                .background(.black)
+                .background(RunnitTheme.yellow)
 
                 // Workouts by week
                 if let workouts = plan.workouts {
@@ -97,14 +98,14 @@ struct WeekSection: View {
                     Spacer()
                     Text("\(completedCount)/\(workouts.count)")
                         .font(.system(size: 12))
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(RunnitTheme.muted)
                     Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
                         .font(.system(size: 12))
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(RunnitTheme.muted)
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 14)
-                .background(Color(.systemGray6))
+                .background(RunnitTheme.canvas)
             }
             .buttonStyle(.plain)
 
@@ -135,7 +136,7 @@ struct WorkoutRow: View {
             Button(action: toggleComplete) {
                 Image(systemName: isCompleted ? "checkmark.circle.fill" : "circle")
                     .font(.system(size: 22))
-                    .foregroundStyle(isCompleted ? .black : Color(.systemGray3))
+                    .foregroundStyle(isCompleted ? RunnitTheme.signal : RunnitTheme.rule)
             }
             .buttonStyle(.plain)
 
@@ -152,29 +153,29 @@ struct WorkoutRow: View {
                     if let day = workout.dayOfWeek {
                         Text(day)
                             .font(.system(size: 11))
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(RunnitTheme.muted)
                     }
                 }
                 Text(workout.title ?? workout.workoutType ?? "Workout")
                     .font(.system(size: 15, weight: .semibold))
                     .strikethrough(isCompleted)
-                    .foregroundStyle(isCompleted ? .secondary : .primary)
+                    .foregroundStyle(isCompleted ? RunnitTheme.muted : RunnitTheme.ink)
 
                 if let desc = workout.description, !desc.isEmpty {
                     Text(desc)
                         .font(.system(size: 13))
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(RunnitTheme.muted)
                         .lineLimit(2)
                 }
 
                 HStack(spacing: 12) {
                     if let dist = workout.distanceMeters {
                         Label(String(format: "%.1f km", Double(dist) / 1000), systemImage: "arrow.right")
-                            .font(.system(size: 12)).foregroundStyle(.secondary)
+                            .font(.system(size: 12)).foregroundStyle(RunnitTheme.muted)
                     }
                     if let dur = workout.durationMinutes {
                         Label("\(dur) min", systemImage: "clock")
-                            .font(.system(size: 12)).foregroundStyle(.secondary)
+                            .font(.system(size: 12)).foregroundStyle(RunnitTheme.muted)
                     }
                 }
             }

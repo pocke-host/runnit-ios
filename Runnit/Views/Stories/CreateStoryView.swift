@@ -26,7 +26,7 @@ struct CreateStoryView: View {
                             Text("CAPTION")
                                 .font(.system(size: 10, weight: .medium))
                                 .tracking(1)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(RunnitTheme.muted)
                             TextField("What's the vibe?", text: $caption, axis: .vertical)
                                 .lineLimit(1...4)
                                 .font(.system(size: 15))
@@ -46,8 +46,9 @@ struct CreateStoryView: View {
                                         Text(label)
                                             .font(.system(size: 12, weight: .semibold))
                                             .padding(.horizontal, 12).padding(.vertical, 6)
-                                            .background(visibility == key ? Color.black : Color(.systemGray6))
-                                            .foregroundStyle(visibility == key ? .white : .primary)
+                                            .background(visibility == key ? RunnitTheme.signal : Color.white)
+                                            .foregroundStyle(visibility == key ? .white : RunnitTheme.ink)
+                                            .overlay(Capsule().stroke(RunnitTheme.rule))
                                             .clipShape(Capsule())
                                     }
                                     .buttonStyle(.plain)
@@ -66,7 +67,7 @@ struct CreateStoryView: View {
                                 }
                             }
                             .frame(maxWidth: .infinity).frame(height: 50)
-                            .background(selectedImage != nil ? Color.black : Color(.systemGray4))
+                            .background(selectedImage != nil ? RunnitTheme.signal : RunnitTheme.rule)
                             .foregroundStyle(.white)
                         }
                         .disabled(selectedImage == nil || isPosting)
@@ -77,6 +78,7 @@ struct CreateStoryView: View {
             }
             .navigationTitle("New Story")
             .navigationBarTitleDisplayMode(.inline)
+            .background(RunnitTheme.canvas)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }

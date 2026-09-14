@@ -62,7 +62,7 @@ struct OnboardingView: View {
             .tabViewStyle(.page(indexDisplayMode: .never))
             .animation(.easeInOut, value: currentStep)
         }
-        .background(Color(.systemBackground))
+        .background(RunnitTheme.canvas)
         .interactiveDismissDisabled() // prevent swipe-down dismissal
     }
 
@@ -105,7 +105,7 @@ private struct ProgressIndicator: View {
         HStack(spacing: 8) {
             ForEach(0..<totalSteps, id: \.self) { i in
                 Capsule()
-                    .fill(i <= currentStep ? Color.black : Color(.systemGray4))
+                    .fill(i <= currentStep ? RunnitTheme.signal : RunnitTheme.rule)
                     .frame(height: 4)
                     .animation(.easeInOut, value: currentStep)
             }
@@ -124,11 +124,12 @@ private struct WelcomeStep: View {
 
             VStack(spacing: 20) {
                 Text("RUNNIT")
-                    .font(.system(size: 52, weight: .black))
+                    .font(.system(size: 52, weight: .black, design: .rounded))
+                    .foregroundStyle(RunnitTheme.ink)
                     .tracking(4)
 
                 Rectangle()
-                    .fill(.black)
+                    .fill(RunnitTheme.yellow)
                     .frame(width: 40, height: 3)
 
                 Text("Your run crew,\nin an app.")
@@ -138,7 +139,7 @@ private struct WelcomeStep: View {
 
                 Text("Connect with athletes, find your crew, and track what matters.")
                     .font(.system(size: 16))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(RunnitTheme.muted)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 40)
             }
@@ -151,9 +152,9 @@ private struct WelcomeStep: View {
                     .font(.system(size: 17, weight: .bold))
                     .frame(maxWidth: .infinity)
                     .frame(height: 54)
-                    .background(.black)
+                    .background(RunnitTheme.signal)
                     .foregroundStyle(.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                    .clipShape(RoundedRectangle(cornerRadius: RunnitTheme.radius))
             }
             .padding(.horizontal, 24)
             .padding(.bottom, 48)
@@ -174,10 +175,10 @@ private struct CityStep: View {
             VStack(alignment: .leading, spacing: 32) {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Where do you run?")
-                        .font(.system(size: 30, weight: .black))
+                        .font(.system(size: 30, weight: .black, design: .rounded))
                     Text("We'll find your local crew.")
                         .font(.system(size: 16))
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(RunnitTheme.muted)
                 }
                 .padding(.top, 32)
 
@@ -187,12 +188,13 @@ private struct CityStep: View {
                         Text("YOUR CITY")
                             .font(.system(size: 11, weight: .bold))
                             .tracking(2)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(RunnitTheme.muted)
                         TextField("e.g. Austin", text: $city)
                             .font(.system(size: 16))
                             .padding(14)
-                            .background(Color(.systemGray6))
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                            .background(Color.white)
+                            .overlay(RoundedRectangle(cornerRadius: RunnitTheme.radius).stroke(RunnitTheme.rule))
+                            .clipShape(RoundedRectangle(cornerRadius: RunnitTheme.radius))
                             .autocorrectionDisabled()
                             .textInputAutocapitalization(.words)
                     }
@@ -202,7 +204,7 @@ private struct CityStep: View {
                         Text("PRIMARY SPORT")
                             .font(.system(size: 11, weight: .bold))
                             .tracking(2)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(RunnitTheme.muted)
 
                         LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 3), spacing: 10) {
                             ForEach(sports, id: \.self) { s in
@@ -213,9 +215,10 @@ private struct CityStep: View {
                                         .font(.system(size: 14, weight: .bold))
                                         .frame(maxWidth: .infinity)
                                         .frame(height: 44)
-                                        .background(sport == s ? Color.black : Color(.systemGray6))
-                                        .foregroundStyle(sport == s ? Color.white : Color.primary)
-                                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                                        .background(sport == s ? RunnitTheme.signal : Color.white)
+                                        .foregroundStyle(sport == s ? Color.white : RunnitTheme.ink)
+                                        .overlay(RoundedRectangle(cornerRadius: RunnitTheme.radius).stroke(RunnitTheme.rule))
+                                        .clipShape(RoundedRectangle(cornerRadius: RunnitTheme.radius))
                                 }
                                 .buttonStyle(.plain)
                             }
@@ -232,7 +235,7 @@ private struct CityStep: View {
                     .font(.system(size: 17, weight: .bold))
                     .frame(maxWidth: .infinity)
                     .frame(height: 54)
-                    .background(.black)
+                    .background(RunnitTheme.signal)
                     .foregroundStyle(.white)
                     .clipShape(RoundedRectangle(cornerRadius: 14))
             }
@@ -254,10 +257,10 @@ private struct ArchetypeStep: View {
         VStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 8) {
                 Text("Here's your athlete identity.")
-                    .font(.system(size: 28, weight: .black))
+                    .font(.system(size: 28, weight: .black, design: .rounded))
                 Text("Pick the archetype that's you.")
                     .font(.system(size: 16))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(RunnitTheme.muted)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, 24)
@@ -293,14 +296,14 @@ private struct ArchetypeStep: View {
                             ProgressView()
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 54)
-                                .background(.black)
+                                .background(RunnitTheme.signal)
                                 .clipShape(RoundedRectangle(cornerRadius: 14))
                         } else {
                             Text("Let's Go")
                                 .font(.system(size: 17, weight: .bold))
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 54)
-                                .background(.black)
+                                .background(RunnitTheme.signal)
                                 .foregroundStyle(.white)
                                 .clipShape(RoundedRectangle(cornerRadius: 14))
                         }
@@ -311,7 +314,7 @@ private struct ArchetypeStep: View {
                 .padding(.bottom, 48)
                 .background(
                     LinearGradient(
-                        gradient: Gradient(colors: [Color(.systemBackground).opacity(0), Color(.systemBackground)]),
+                        gradient: Gradient(colors: [RunnitTheme.canvas.opacity(0), RunnitTheme.canvas]),
                         startPoint: .top,
                         endPoint: .bottom
                     )
@@ -332,11 +335,11 @@ private struct ArchetypeCard: View {
         HStack(spacing: 16) {
             ZStack {
                 Circle()
-                    .fill(isSelected ? Color.white : Color(.systemGray5))
+                    .fill(isSelected ? RunnitTheme.yellow : RunnitTheme.rule)
                     .frame(width: 48, height: 48)
                 Image(systemName: option.icon)
                     .font(.system(size: 20))
-                    .foregroundStyle(isSelected ? Color.black : Color(.systemGray))
+                    .foregroundStyle(isSelected ? RunnitTheme.ink : RunnitTheme.muted)
             }
 
             VStack(alignment: .leading, spacing: 4) {
@@ -345,7 +348,7 @@ private struct ArchetypeCard: View {
                     .foregroundStyle(isSelected ? .white : .primary)
                 Text(option.tagline)
                     .font(.system(size: 13))
-                    .foregroundStyle(isSelected ? Color(.systemGray3) : .secondary)
+                    .foregroundStyle(isSelected ? Color.white.opacity(0.75) : RunnitTheme.muted)
             }
 
             Spacer()
@@ -357,8 +360,9 @@ private struct ArchetypeCard: View {
             }
         }
         .padding(16)
-        .background(isSelected ? Color.black : Color(.systemGray6))
-        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .background(isSelected ? RunnitTheme.ink : Color.white)
+        .overlay(RoundedRectangle(cornerRadius: RunnitTheme.radius).stroke(isSelected ? RunnitTheme.ink : RunnitTheme.rule))
+        .clipShape(RoundedRectangle(cornerRadius: RunnitTheme.radius))
         .animation(.easeInOut(duration: 0.15), value: isSelected)
     }
 }

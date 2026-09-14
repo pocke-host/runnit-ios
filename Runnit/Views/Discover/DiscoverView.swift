@@ -12,7 +12,7 @@ struct DiscoverView: View {
                 // Search bar
                 HStack(spacing: 10) {
                     Image(systemName: "magnifyingglass")
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(RunnitTheme.muted)
                     TextField("Search athletes...", text: $query)
                         .autocorrectionDisabled()
                         .textInputAutocapitalization(.never)
@@ -23,13 +23,14 @@ struct DiscoverView: View {
                             service.searchResults = []
                         } label: {
                             Image(systemName: "xmark.circle.fill")
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(RunnitTheme.muted)
                         }
                     }
                 }
                 .padding(12)
-                .background(Color(.systemGray6))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .background(Color.white)
+                .overlay(RoundedRectangle(cornerRadius: RunnitTheme.radius).stroke(RunnitTheme.rule))
+                .clipShape(RoundedRectangle(cornerRadius: RunnitTheme.radius))
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
 
@@ -58,11 +59,14 @@ struct DiscoverView: View {
                                 .listRowSeparator(.hidden)
                         }
                         .listStyle(.plain)
+                        .scrollContentBackground(.hidden)
+                        .background(RunnitTheme.canvas)
                     }
                 }
             }
             .navigationTitle("Discover")
             .navigationBarTitleDisplayMode(.large)
+            .background(RunnitTheme.canvas)
             .alert("Error", isPresented: .init(get: { errorMessage != nil }, set: { _ in errorMessage = nil })) {
                 Button("OK", role: .cancel) {}
             } message: {
@@ -104,11 +108,11 @@ struct UserRow: View {
             AsyncImage(url: user.avatarURL) { image in
                 image.resizable().scaledToFill()
             } placeholder: {
-                Circle().fill(Color(.systemGray5))
+                Circle().fill(RunnitTheme.yellow)
                     .overlay(
                         Text(user.displayName.prefix(1).uppercased())
                             .font(.system(size: 18, weight: .black))
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(RunnitTheme.ink)
                     )
             }
             .frame(width: 48, height: 48)
@@ -119,11 +123,11 @@ struct UserRow: View {
                     .font(.system(size: 15, weight: .semibold))
                 Text("@\(user.user)")
                     .font(.system(size: 13))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(RunnitTheme.muted)
                 if let sport = user.sport {
                     Label(sport, systemImage: "figure.run")
                         .font(.system(size: 12))
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(RunnitTheme.muted)
                 }
             }
 
@@ -138,8 +142,9 @@ struct UserRow: View {
                         Text(isFollowing ? "Following" : "Follow")
                             .font(.system(size: 13, weight: .semibold))
                             .frame(width: 80, height: 32)
-                            .background(isFollowing ? Color(.systemGray5) : .black)
-                            .foregroundStyle(isFollowing ? Color.primary : Color.white)
+                            .background(isFollowing ? RunnitTheme.canvas : RunnitTheme.signal)
+                            .foregroundStyle(isFollowing ? RunnitTheme.ink : Color.white)
+                            .overlay(RoundedRectangle(cornerRadius: RunnitTheme.radius).stroke(RunnitTheme.rule))
                     }
                 }
             }

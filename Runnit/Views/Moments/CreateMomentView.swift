@@ -28,7 +28,7 @@ struct CreateMomentView: View {
                             Text("CAPTION")
                                 .font(.system(size: 10, weight: .medium))
                                 .tracking(1)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(RunnitTheme.muted)
                             TextField("What's on your mind?", text: $caption, axis: .vertical)
                                 .lineLimit(1...4)
                                 .font(.system(size: 15))
@@ -41,11 +41,11 @@ struct CreateMomentView: View {
                             Text("SONG")
                                 .font(.system(size: 10, weight: .medium))
                                 .tracking(1)
-                                .foregroundStyle(.secondary)
+                            .foregroundStyle(RunnitTheme.muted)
                             HStack(spacing: 12) {
                                 Image(systemName: "music.note")
                                     .font(.system(size: 16))
-                                    .foregroundStyle(.secondary)
+                                    .foregroundStyle(RunnitTheme.muted)
                                 VStack(spacing: 6) {
                                     TextField("Song title", text: $songTitle)
                                         .font(.system(size: 14))
@@ -65,7 +65,7 @@ struct CreateMomentView: View {
                                 Text("LINK AN ACTIVITY")
                                     .font(.system(size: 10, weight: .medium))
                                     .tracking(1)
-                                    .foregroundStyle(.secondary)
+                                    .foregroundStyle(RunnitTheme.muted)
                                 ScrollView(.horizontal, showsIndicators: false) {
                                     HStack(spacing: 8) {
                                         ForEach(recentActivities) { activity in
@@ -80,8 +80,9 @@ struct CreateMomentView: View {
                                                 }
                                                 .font(.system(size: 12, weight: .semibold))
                                                 .padding(.horizontal, 12).padding(.vertical, 8)
-                                                .background(selected ? Color.black : Color(.systemGray6))
-                                                .foregroundStyle(selected ? .white : .primary)
+                                                .background(selected ? RunnitTheme.signal : Color.white)
+                                                .foregroundStyle(selected ? .white : RunnitTheme.ink)
+                                                .overlay(Capsule().stroke(RunnitTheme.rule))
                                                 .clipShape(Capsule())
                                             }
                                             .buttonStyle(.plain)
@@ -103,7 +104,7 @@ struct CreateMomentView: View {
                                 }
                             }
                             .frame(maxWidth: .infinity).frame(height: 50)
-                            .background(selectedImage != nil ? Color.black : Color(.systemGray4))
+                            .background(selectedImage != nil ? RunnitTheme.signal : RunnitTheme.rule)
                             .foregroundStyle(.white)
                         }
                         .disabled(selectedImage == nil || isPosting)
@@ -114,6 +115,7 @@ struct CreateMomentView: View {
             }
             .navigationTitle("New Moment")
             .navigationBarTitleDisplayMode(.inline)
+            .background(RunnitTheme.canvas)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }

@@ -17,7 +17,7 @@ struct SpotifyPickerView: View {
                 // Search bar
                 HStack(spacing: 10) {
                     Image(systemName: "magnifyingglass")
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(RunnitTheme.muted)
                     TextField("Search songs or artists...", text: $query)
                         .autocorrectionDisabled()
                         .textInputAutocapitalization(.never)
@@ -28,13 +28,14 @@ struct SpotifyPickerView: View {
                             service.results = []
                         } label: {
                             Image(systemName: "xmark.circle.fill")
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(RunnitTheme.muted)
                         }
                     }
                 }
                 .padding(12)
-                .background(Color(.systemGray6))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .background(Color.white)
+                .overlay(RoundedRectangle(cornerRadius: RunnitTheme.radius).stroke(RunnitTheme.rule))
+                .clipShape(RoundedRectangle(cornerRadius: RunnitTheme.radius))
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
 
@@ -67,11 +68,14 @@ struct SpotifyPickerView: View {
                                 }
                         }
                         .listStyle(.plain)
+                        .scrollContentBackground(.hidden)
+                        .background(RunnitTheme.canvas)
                     }
                 }
             }
             .navigationTitle("Pick a Track")
             .navigationBarTitleDisplayMode(.inline)
+            .background(RunnitTheme.canvas)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
@@ -118,11 +122,11 @@ private struct TrackRow: View {
             // Music note placeholder icon
             ZStack {
                 RoundedRectangle(cornerRadius: 8)
-                    .fill(Color(.systemGray5))
+                    .fill(RunnitTheme.yellow)
                     .frame(width: 48, height: 48)
                 Image(systemName: "music.note")
                     .font(.system(size: 20))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(RunnitTheme.ink)
             }
 
             VStack(alignment: .leading, spacing: 3) {
@@ -131,12 +135,12 @@ private struct TrackRow: View {
                     .lineLimit(1)
                 Text(track.artist)
                     .font(.system(size: 13))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(RunnitTheme.muted)
                     .lineLimit(1)
                 if let album = track.albumName {
                     Text(album)
                         .font(.system(size: 12))
-                        .foregroundStyle(Color(.systemGray3))
+                        .foregroundStyle(RunnitTheme.muted)
                         .lineLimit(1)
                 }
             }
@@ -145,7 +149,7 @@ private struct TrackRow: View {
 
             Image(systemName: "chevron.right")
                 .font(.system(size: 13))
-                .foregroundStyle(Color(.systemGray3))
+                .foregroundStyle(RunnitTheme.muted)
         }
     }
 }

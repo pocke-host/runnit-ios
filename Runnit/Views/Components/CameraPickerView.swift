@@ -39,7 +39,7 @@ struct CameraPickerView: View {
                 .padding(.horizontal, 20)
                 .frame(maxWidth: .infinity)
                 .frame(height: 180)
-                .background(Color(.systemGray6))
+                .background(RunnitTheme.canvas)
             }
         }
         .sheet(isPresented: $showCamera) {
@@ -58,19 +58,19 @@ struct CameraPickerView: View {
 private struct SourceButton: View {
     let title: String
     let icon: String
-    let action: () -> Void
+    let onTap: () -> Void
 
     var body: some View {
-        Button(action: action) {
+        Button(action: onTap) {
             VStack(spacing: 10) {
                 Image(systemName: icon).font(.system(size: 28))
                 Text(title).font(.system(size: 13, weight: .medium))
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 24)
-            .background(Color(.systemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color(.systemGray4), lineWidth: 1))
+            .background(Color.white)
+            .clipShape(RoundedRectangle(cornerRadius: RunnitTheme.radius))
+            .overlay(RoundedRectangle(cornerRadius: RunnitTheme.radius).stroke(RunnitTheme.rule, lineWidth: 1))
         }
         .foregroundStyle(.primary)
         .buttonStyle(.plain)

@@ -31,7 +31,7 @@ struct PaywallView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Close") { dismiss() }
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(RunnitTheme.muted)
                 }
             }
         }
@@ -49,15 +49,15 @@ struct PaywallView: View {
         VStack(spacing: 12) {
             Image(systemName: "bolt.circle.fill")
                 .font(.system(size: 60))
-                .foregroundStyle(.orange)
+                .foregroundStyle(RunnitTheme.signal)
                 .padding(.top, 16)
 
             Text("Go Premium")
-                .font(.system(size: 28, weight: .black))
+                .font(.system(size: 28, weight: .black, design: .rounded))
 
             Text("Unlock the full Runnit experience")
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(RunnitTheme.muted)
                 .multilineTextAlignment(.center)
         }
     }
@@ -71,8 +71,9 @@ struct PaywallView: View {
             FeatureRow(icon: "waveform.path.ecg", text: "HR zone analysis & recovery insights")
         }
         .padding(20)
-        .background(Color(.systemGray6))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .background(Color.white)
+        .overlay(RoundedRectangle(cornerRadius: RunnitTheme.radius).stroke(RunnitTheme.rule))
+        .clipShape(RoundedRectangle(cornerRadius: RunnitTheme.radius))
     }
 
     private func packagePicker(offering: Offering) -> some View {
@@ -116,9 +117,9 @@ struct PaywallView: View {
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 16)
-            .background(Color.orange)
+            .background(RunnitTheme.signal)
             .foregroundStyle(.white)
-            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .clipShape(RoundedRectangle(cornerRadius: RunnitTheme.radius))
         }
         .disabled(purchases.isPurchasing)
     }
@@ -136,7 +137,7 @@ struct PaywallView: View {
             }
         }
         .font(.subheadline)
-        .foregroundStyle(.secondary)
+        .foregroundStyle(RunnitTheme.muted)
     }
 
     private var legalText: some View {
@@ -157,7 +158,7 @@ private struct FeatureRow: View {
         HStack(spacing: 14) {
             Image(systemName: icon)
                 .font(.system(size: 18))
-                .foregroundStyle(.orange)
+                .foregroundStyle(RunnitTheme.signal)
                 .frame(width: 24)
             Text(text)
                 .font(.subheadline)
@@ -199,7 +200,7 @@ private struct PackageCard: View {
                                 .font(.caption2.weight(.bold))
                                 .padding(.horizontal, 8)
                                 .padding(.vertical, 3)
-                                .background(Color.orange)
+                                .background(RunnitTheme.yellow)
                                 .foregroundStyle(.white)
                                 .clipShape(Capsule())
                         }
@@ -224,10 +225,10 @@ private struct PackageCard: View {
                 }
             }
             .padding(16)
-            .background(isSelected ? Color.orange.opacity(0.08) : Color(.systemGray6))
+            .background(isSelected ? RunnitTheme.signal.opacity(0.08) : Color.white)
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(isSelected ? Color.orange : Color.clear, lineWidth: 2)
+                    .stroke(isSelected ? RunnitTheme.signal : RunnitTheme.rule, lineWidth: 2)
             )
             .clipShape(RoundedRectangle(cornerRadius: 12))
         }

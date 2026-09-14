@@ -14,6 +14,7 @@ enum RunnitTheme {
     static let pagePadding: CGFloat = 20
     static let cardRadius: CGFloat = 0
     static let controlRadius: CGFloat = 6
+    static let radius: CGFloat = 6
 }
 
 struct RunnitPrimaryButtonStyle: ButtonStyle {

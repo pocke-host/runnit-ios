@@ -38,6 +38,7 @@ struct EventsView: View {
             }
             .navigationTitle("Events")
             .navigationBarTitleDisplayMode(.large)
+            .background(RunnitTheme.canvas)
             .alert("Error", isPresented: .init(
                 get: { errorMessage != nil },
                 set: { _ in errorMessage = nil }
@@ -71,7 +72,7 @@ private struct DiscoverEventsSection: View {
             // City filter bar
             HStack(spacing: 10) {
                 Image(systemName: "mappin")
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(RunnitTheme.muted)
                 TextField("Filter by city...", text: $cityFilter)
                     .autocorrectionDisabled()
                     .textInputAutocapitalization(.words)
@@ -79,13 +80,14 @@ private struct DiscoverEventsSection: View {
                 if !cityFilter.isEmpty {
                     Button { cityFilter = "" } label: {
                         Image(systemName: "xmark.circle.fill")
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(RunnitTheme.muted)
                     }
                 }
             }
             .padding(12)
-            .background(Color(.systemGray6))
-            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .background(Color.white)
+            .overlay(RoundedRectangle(cornerRadius: RunnitTheme.radius).stroke(RunnitTheme.rule))
+            .clipShape(RoundedRectangle(cornerRadius: RunnitTheme.radius))
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
 
@@ -108,6 +110,8 @@ private struct DiscoverEventsSection: View {
                             .listRowSeparator(.hidden)
                     }
                     .listStyle(.plain)
+                    .scrollContentBackground(.hidden)
+                    .background(RunnitTheme.canvas)
                 }
             }
         }
@@ -165,6 +169,8 @@ private struct MyEventsSection: View {
                         .listRowSeparator(.hidden)
                 }
                 .listStyle(.plain)
+                .scrollContentBackground(.hidden)
+                .background(RunnitTheme.canvas)
             }
         }
         .task {
@@ -209,13 +215,13 @@ struct EventRow: View {
                     if let date = event.eventDatetime {
                         Label(Self.dateFormatter.string(from: date), systemImage: "clock")
                             .font(.system(size: 13))
-                            .foregroundStyle(.secondary)
+                        .foregroundStyle(RunnitTheme.muted)
                     }
 
                     if let location = event.locationName {
                         Label(location, systemImage: "mappin")
                             .font(.system(size: 13))
-                            .foregroundStyle(.secondary)
+                        .foregroundStyle(RunnitTheme.muted)
                     }
                 }
 
@@ -226,7 +232,7 @@ struct EventRow: View {
                     .font(.system(size: 11, weight: .bold))
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
-                    .background(.black)
+                    .background(RunnitTheme.signal)
                     .foregroundStyle(.white)
                     .clipShape(RoundedRectangle(cornerRadius: 4))
             }
@@ -234,11 +240,11 @@ struct EventRow: View {
             HStack {
                 Label("\(event.attendeeCount) going", systemImage: "person.2")
                     .font(.system(size: 12))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(RunnitTheme.muted)
 
                 Text("by \(event.creatorName)")
                     .font(.system(size: 12))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(RunnitTheme.muted)
 
                 Spacer()
 
@@ -252,8 +258,9 @@ struct EventRow: View {
             }
         }
         .padding(14)
-        .background(Color(.systemGray6))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .background(Color.white)
+        .overlay(RoundedRectangle(cornerRadius: RunnitTheme.radius).stroke(RunnitTheme.rule))
+        .clipShape(RoundedRectangle(cornerRadius: RunnitTheme.radius))
     }
 
     private func sendRSVP(_ status: String) {
@@ -326,9 +333,10 @@ private struct RSVPButton: View {
                 }
                 .padding(.horizontal, 12)
                 .padding(.vertical, 6)
-                .background(currentStatus == "GOING" ? Color.black : Color(.systemGray5))
-                .foregroundStyle(currentStatus == "GOING" ? Color.white : Color.primary)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .background(currentStatus == "GOING" ? RunnitTheme.signal : RunnitTheme.canvas)
+                .foregroundStyle(currentStatus == "GOING" ? Color.white : RunnitTheme.ink)
+                .overlay(RoundedRectangle(cornerRadius: RunnitTheme.radius).stroke(RunnitTheme.rule))
+                .clipShape(RoundedRectangle(cornerRadius: RunnitTheme.radius))
             }
         }
     }

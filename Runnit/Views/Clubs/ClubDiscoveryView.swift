@@ -48,6 +48,7 @@ struct ClubDiscoveryView: View {
             }
             .navigationTitle("Clubs")
             .navigationBarTitleDisplayMode(.large)
+            .background(RunnitTheme.canvas)
             .navigationDestination(item: $selectedClub) { club in
                 ClubDetailView(club: club)
             }
@@ -92,7 +93,7 @@ private struct NearbyClubsSection: View {
                     .font(.system(size: 15, weight: .semibold))
                     .padding(.horizontal, 24)
                     .padding(.vertical, 12)
-                    .background(.black)
+                    .background(RunnitTheme.signal)
                     .foregroundStyle(Color.white)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
@@ -248,11 +249,11 @@ struct ClubRow: View {
             // Club avatar / icon
             ZStack {
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(Color(.systemGray5))
+                    .fill(RunnitTheme.yellow)
                     .frame(width: 52, height: 52)
                 Text(club.name.prefix(1).uppercased())
                     .font(.system(size: 22, weight: .black))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(RunnitTheme.ink)
             }
 
             VStack(alignment: .leading, spacing: 4) {
@@ -286,9 +287,10 @@ struct ClubRow: View {
                         Text(joined ? "Joined" : "Join")
                             .font(.system(size: 13, weight: .semibold))
                             .frame(width: 72, height: 32)
-                            .background(joined ? Color(.systemGray5) : .black)
-                            .foregroundStyle(joined ? Color.primary : Color.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                            .background(joined ? RunnitTheme.canvas : RunnitTheme.signal)
+                            .foregroundStyle(joined ? RunnitTheme.ink : Color.white)
+                            .overlay(RoundedRectangle(cornerRadius: RunnitTheme.radius).stroke(RunnitTheme.rule))
+                            .clipShape(RoundedRectangle(cornerRadius: RunnitTheme.radius))
                     }
                 }
             }
@@ -302,7 +304,7 @@ struct ClubRow: View {
             .font(.system(size: 11, weight: .bold))
             .padding(.horizontal, 8)
             .padding(.vertical, 3)
-            .background(Color.black)
+            .background(RunnitTheme.ink)
             .foregroundStyle(Color.white)
             .clipShape(RoundedRectangle(cornerRadius: 4))
     }
@@ -351,7 +353,7 @@ struct ClubDetailView: View {
                         if let sport = club.sport {
                             Text(sport)
                                 .font(.system(size: 13, weight: .bold))
-                                .foregroundStyle(Color(.systemGray3))
+                                .foregroundStyle(RunnitTheme.yellow)
                         }
                     }
                 }
@@ -389,9 +391,10 @@ struct ClubDetailView: View {
                                 .font(.system(size: 16, weight: .bold))
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 48)
-                                .background(isJoined ? Color(.systemGray5) : .black)
-                                .foregroundStyle(isJoined ? Color.primary : Color.white)
-                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                                .background(isJoined ? RunnitTheme.canvas : RunnitTheme.signal)
+                                .foregroundStyle(isJoined ? RunnitTheme.ink : Color.white)
+                                .overlay(RoundedRectangle(cornerRadius: RunnitTheme.radius).stroke(RunnitTheme.rule))
+                                .clipShape(RoundedRectangle(cornerRadius: RunnitTheme.radius))
                         }
                     }
                     .disabled(isLoading)
@@ -468,7 +471,8 @@ private struct SearchBar: View {
             }
         }
         .padding(12)
-        .background(Color(.systemGray6))
-        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .background(Color.white)
+        .overlay(RoundedRectangle(cornerRadius: RunnitTheme.radius).stroke(RunnitTheme.rule))
+        .clipShape(RoundedRectangle(cornerRadius: RunnitTheme.radius))
     }
 }

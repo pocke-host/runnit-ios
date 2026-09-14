@@ -49,7 +49,7 @@ struct CommentsView: View {
                     } else {
                         Image(systemName: "arrow.up.circle.fill")
                             .font(.system(size: 28))
-                            .foregroundStyle(canPost ? .black : Color(.systemGray4))
+                            .foregroundStyle(canPost ? RunnitTheme.signal : RunnitTheme.rule)
                     }
                 }
                 .disabled(!canPost || isPosting)
@@ -61,6 +61,7 @@ struct CommentsView: View {
         }
         .navigationTitle("Comments")
         .navigationBarTitleDisplayMode(.inline)
+        .background(RunnitTheme.canvas)
         .task {
             do { try await service.fetchComments(activityId: activityId) }
             catch { errorMessage = error.localizedDescription }
@@ -101,11 +102,11 @@ struct CommentRow: View {
             AsyncImage(url: URL(string: comment.userAvatarUrl ?? "")) { image in
                 image.resizable().scaledToFill()
             } placeholder: {
-                Circle().fill(Color(.systemGray5))
+                Circle().fill(RunnitTheme.yellow)
                     .overlay(
                         Text((comment.userDisplayName ?? "?").prefix(1).uppercased())
                             .font(.system(size: 12, weight: .black))
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(RunnitTheme.ink)
                     )
             }
             .frame(width: 32, height: 32)
@@ -119,7 +120,7 @@ struct CommentRow: View {
                     if let date = comment.createdAt {
                         Text(date.formatted(.relative(presentation: .named)))
                             .font(.system(size: 12))
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(RunnitTheme.muted)
                     }
                 }
                 Text(comment.content)
