@@ -24,21 +24,13 @@ struct MainTabView: View {
                 .tabItem { Label("Track", systemImage: "record.circle") }
                 .tag(2)
 
-            EventsView()
-                .tabItem { Label("Events", systemImage: "calendar.badge.clock") }
+            TrainingTabView()
+                .tabItem { Label("Training", systemImage: "calendar") }
                 .tag(3)
-
-            ClubDiscoveryView()
-                .tabItem { Label("Clubs", systemImage: "person.3") }
-                .tag(4)
-
-            PlansView()
-                .tabItem { Label("Plans", systemImage: "calendar") }
-                .tag(5)
 
             ProfileView()
                 .tabItem { Label("Profile", systemImage: "person") }
-                .tag(6)
+                .tag(4)
         }
         .tint(RunnitTheme.signal)
         .onAppear {
@@ -65,6 +57,99 @@ struct MainTabView: View {
             case .moment: CreateMomentView()
             }
         }
+    }
+}
+
+// MARK: - Training hub
+
+private struct TrainingTabView: View {
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        RunnitSectionLabel(text: "YOUR TRAINING")
+                        Text("Build the block.")
+                            .font(.system(size: 32, weight: .black, design: .rounded))
+                            .foregroundStyle(RunnitTheme.ink)
+                        Text("Plans, races, and your running crew in one place.")
+                            .font(.system(size: 15))
+                            .foregroundStyle(RunnitTheme.muted)
+                    }
+
+                    TrainingHubLink(
+                        title: "Training plans",
+                        subtitle: "Follow your next workout and stay on track.",
+                        icon: "calendar",
+                        tint: RunnitTheme.signal
+                    ) {
+                        PlansView()
+                    }
+
+                    TrainingHubLink(
+                        title: "Races & events",
+                        subtitle: "Find your next start line and manage RSVPs.",
+                        icon: "flag.checkered",
+                        tint: RunnitTheme.yellow
+                    ) {
+                        EventsView()
+                    }
+
+                    TrainingHubLink(
+                        title: "Run clubs",
+                        subtitle: "Find the people you want to run with.",
+                        icon: "person.3",
+                        tint: RunnitTheme.ink
+                    ) {
+                        ClubDiscoveryView()
+                    }
+                }
+                .padding(20)
+            }
+            .background(RunnitTheme.canvas)
+            .navigationTitle("Training")
+            .navigationBarTitleDisplayMode(.large)
+        }
+    }
+}
+
+private struct TrainingHubLink<Destination: View>: View {
+    let title: String
+    let subtitle: String
+    let icon: String
+    let tint: Color
+    @ViewBuilder let destination: () -> Destination
+
+    var body: some View {
+        NavigationLink(destination: destination()) {
+            HStack(spacing: 14) {
+                Image(systemName: icon)
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundStyle(tint == RunnitTheme.yellow ? RunnitTheme.ink : .white)
+                    .frame(width: 46, height: 46)
+                    .background(tint)
+                    .clipShape(RoundedRectangle(cornerRadius: RunnitTheme.radius))
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(title)
+                        .font(.system(size: 16, weight: .bold, design: .rounded))
+                        .foregroundStyle(RunnitTheme.ink)
+                    Text(subtitle)
+                        .font(.system(size: 13))
+                        .foregroundStyle(RunnitTheme.muted)
+                        .multilineTextAlignment(.leading)
+                }
+
+                Spacer()
+                Image(systemName: "arrow.up.right")
+                    .font(.system(size: 13, weight: .bold))
+                    .foregroundStyle(RunnitTheme.signal)
+            }
+            .padding(16)
+            .background(Color.white)
+            .overlay(Rectangle().stroke(RunnitTheme.rule))
+        }
+        .buttonStyle(.plain)
     }
 }
 
