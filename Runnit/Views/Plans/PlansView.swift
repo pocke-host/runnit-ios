@@ -39,6 +39,7 @@ struct PlansView: View {
                 }
             }
             .navigationTitle("Training Plans")
+            .navigationBarTitleDisplayMode(.large)
             .background(RunnitTheme.canvas)
             .task {
                 do { try await service.fetchPlans() }
@@ -85,7 +86,10 @@ struct PlanRow: View {
                     }
                 }
             }
-            .padding(.vertical, 4)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+            .background(Color.white)
+            .overlay(Rectangle().stroke(RunnitTheme.rule))
         }
     }
 }

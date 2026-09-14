@@ -27,6 +27,7 @@ struct TrackView: View {
             }
             .navigationTitle("Track")
             .navigationBarTitleDisplayMode(.large)
+            .background(RunnitTheme.canvas)
             .sheet(isPresented: $showSaveSheet) {
                 SaveActivitySheet(
                     location: location,
@@ -91,12 +92,12 @@ struct TrackView: View {
         VStack(spacing: 20) {
             Image(systemName: "location.circle")
                 .font(.system(size: 60))
-                .foregroundStyle(.black)
+                .foregroundStyle(RunnitTheme.signal)
             Text("Location Access")
                 .font(.system(size: 24, weight: .black))
             Text("Runnit needs your location to track distance, pace, and route.")
                 .multilineTextAlignment(.center)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(RunnitTheme.muted)
             Button("Enable Location") { location.requestPermission() }
                 .buttonStyle(PrimaryButtonStyle())
         }
@@ -111,7 +112,7 @@ struct TrackView: View {
                 .font(.system(size: 24, weight: .black))
             Text("Enable location access in Settings → Runnit.")
                 .multilineTextAlignment(.center)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(RunnitTheme.muted)
             Button("Open Settings") {
                 if let url = URL(string: UIApplication.openSettingsURLString) {
                     UIApplication.shared.open(url)
@@ -224,8 +225,9 @@ struct SaveActivitySheet: View {
                     }
                     .padding(14)
                     .foregroundStyle(.primary)
-                    .background(Color(.systemGray6))
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .background(Color.white)
+                    .overlay(RoundedRectangle(cornerRadius: RunnitTheme.radius).stroke(RunnitTheme.rule))
+                    .clipShape(RoundedRectangle(cornerRadius: RunnitTheme.radius))
                 }
                 .padding(.horizontal)
 
@@ -247,6 +249,7 @@ struct SaveActivitySheet: View {
             }
             .navigationTitle("Save Activity")
             .navigationBarTitleDisplayMode(.inline)
+            .background(RunnitTheme.canvas)
             .sheet(isPresented: $showSpotifyPicker) {
                 SpotifyPickerView(selectedTrack: $selectedTrack)
             }

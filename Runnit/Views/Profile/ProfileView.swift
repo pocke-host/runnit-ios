@@ -36,9 +36,9 @@ struct ProfileView: View {
                             AsyncImage(url: user.avatarURL) { image in
                                 image.resizable().scaledToFill()
                             } placeholder: {
-                                Circle().fill(Color(.systemGray5))
+                                Circle().fill(RunnitTheme.yellow)
                                     .overlay(Text(user.displayName.prefix(1).uppercased())
-                                        .font(.system(size: 32, weight: .black)).foregroundStyle(.secondary))
+                                        .font(.system(size: 32, weight: .black)).foregroundStyle(RunnitTheme.ink))
                             }
                             .frame(width: 80, height: 80)
                             .clipShape(Circle())
@@ -48,14 +48,14 @@ struct ProfileView: View {
                                     .font(.system(size: 22, weight: .black))
                                 Text("@\(user.user)")
                                     .font(.system(size: 14))
-                                    .foregroundStyle(.secondary)
+                                    .foregroundStyle(RunnitTheme.muted)
                             }
 
                             if let bio = user.bio, !bio.isEmpty {
                                 Text(bio)
                                     .font(.system(size: 14))
                                     .multilineTextAlignment(.center)
-                                    .foregroundStyle(.secondary)
+                                    .foregroundStyle(RunnitTheme.muted)
                                     .padding(.horizontal, 32)
                             }
 
@@ -63,12 +63,12 @@ struct ProfileView: View {
                                 if let sport = user.sport {
                                     Label(sport, systemImage: "figure.run")
                                         .font(.system(size: 12))
-                                        .foregroundStyle(.secondary)
+                                        .foregroundStyle(RunnitTheme.muted)
                                 }
                                 if let location = user.location {
                                     Label(location, systemImage: "mappin")
                                         .font(.system(size: 12))
-                                        .foregroundStyle(.secondary)
+                                        .foregroundStyle(RunnitTheme.muted)
                                 }
                             }
 
@@ -81,12 +81,12 @@ struct ProfileView: View {
                                         .padding(.horizontal, 14)
                                         .padding(.vertical, 6)
                                         .background(Color.white)
-                                        .foregroundStyle(.black)
+                                        .foregroundStyle(RunnitTheme.ink)
                                         .clipShape(RoundedRectangle(cornerRadius: 6))
 
                                     Text(resp.tagline)
                                         .font(.system(size: 12))
-                                        .foregroundStyle(Color(.systemGray3))
+                                        .foregroundStyle(RunnitTheme.yellow)
                                         .multilineTextAlignment(.center)
                                 }
                                 .padding(.top, 4)
@@ -101,7 +101,7 @@ struct ProfileView: View {
                         Button("Edit Profile") { showEditProfile = true }
                             .frame(maxWidth: .infinity)
                             .frame(height: 44)
-                            .overlay(Rectangle().stroke(.black, lineWidth: 1))
+                            .overlay(Rectangle().stroke(RunnitTheme.rule, lineWidth: 1))
                             .font(.system(size: 13, weight: .semibold))
                             .foregroundStyle(RunnitTheme.signal)
                             .padding(.horizontal, 20)
@@ -199,6 +199,7 @@ struct ProfileView: View {
             }
             .navigationTitle("Profile")
             .navigationBarTitleDisplayMode(.large)
+            .background(RunnitTheme.canvas)
             .sheet(isPresented: $showEditProfile) {
                 EditProfileView()
             }
