@@ -2,7 +2,7 @@ import Foundation
 
 // MARK: - Club model
 
-struct Club: Identifiable, Decodable {
+struct Club: Identifiable, Decodable, Hashable {
     let id: Int
     let name: String
     let sport: String?

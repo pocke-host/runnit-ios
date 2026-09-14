@@ -93,7 +93,7 @@ private struct NearbyClubsSection: View {
                     .padding(.horizontal, 24)
                     .padding(.vertical, 12)
                     .background(.black)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.white)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -287,7 +287,7 @@ struct ClubRow: View {
                             .font(.system(size: 13, weight: .semibold))
                             .frame(width: 72, height: 32)
                             .background(joined ? Color(.systemGray5) : .black)
-                            .foregroundStyle(joined ? .primary : .white)
+                            .foregroundStyle(joined ? Color.primary : Color.white)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
                 }
@@ -303,7 +303,7 @@ struct ClubRow: View {
             .padding(.horizontal, 8)
             .padding(.vertical, 3)
             .background(Color.black)
-            .foregroundStyle(.white)
+            .foregroundStyle(Color.white)
             .clipShape(RoundedRectangle(cornerRadius: 4))
     }
 
@@ -347,7 +347,7 @@ struct ClubDetailView: View {
                     VStack(spacing: 8) {
                         Text(club.name.prefix(2).uppercased())
                             .font(.system(size: 48, weight: .black))
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color.white)
                         if let sport = club.sport {
                             Text(sport)
                                 .font(.system(size: 13, weight: .bold))
@@ -390,7 +390,7 @@ struct ClubDetailView: View {
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 48)
                                 .background(isJoined ? Color(.systemGray5) : .black)
-                                .foregroundStyle(isJoined ? .primary : .white)
+                                .foregroundStyle(isJoined ? Color.primary : Color.white)
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
                         }
                     }

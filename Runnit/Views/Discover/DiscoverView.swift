@@ -139,7 +139,7 @@ struct UserRow: View {
                             .font(.system(size: 13, weight: .semibold))
                             .frame(width: 80, height: 32)
                             .background(isFollowing ? Color(.systemGray5) : .black)
-                            .foregroundStyle(isFollowing ? .primary : .white)
+                            .foregroundStyle(isFollowing ? Color.primary : Color.white)
                     }
                 }
             }

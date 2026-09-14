@@ -92,8 +92,8 @@ final class HealthKitService: ObservableObject {
             externalId: workout.uuid.uuidString,
             sportType: sportType(for: workout.workoutActivityType),
             durationSeconds: Int(workout.duration.rounded()),
-            distanceMeters: workout.totalDistance?.doubleValue(for: .meter()).map { Int($0.rounded()) },
-            calories: workout.totalEnergyBurned?.doubleValue(for: .kilocalorie()).map { Int($0.rounded()) },
+            distanceMeters: workout.totalDistance.map { Int($0.doubleValue(for: .meter()).rounded()) },
+            calories: workout.totalEnergyBurned.map { Int($0.doubleValue(for: .kilocalorie()).rounded()) },
             performedAt: formatter.string(from: workout.startDate)
         )
     }

@@ -1,7 +1,7 @@
 import Foundation
 import CoreLocation
 
-struct Activity: Codable, Identifiable {
+struct Activity: Decodable, Identifiable {
     let id: Int
     let userId: Int?
     let userDisplayName: String?
