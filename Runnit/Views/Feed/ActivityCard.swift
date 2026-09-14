@@ -20,7 +20,7 @@ struct ActivityCard: View {
                 AsyncImage(url: URL(string: activity.userAvatarUrl ?? "")) { image in
                     image.resizable().scaledToFill()
                 } placeholder: {
-                    Circle().fill(Color(.systemGray5))
+                    Circle().fill(RunnitTheme.yellow)
                 }
                 .frame(width: 36, height: 36)
                 .clipShape(Circle())
@@ -79,8 +79,8 @@ struct ActivityCard: View {
             }
         }
         .padding(16)
-        .background(Color(.systemBackground))
-        .overlay(Rectangle().stroke(Color(.systemGray5), lineWidth: 1))
+        .background(Color.white)
+        .overlay(Rectangle().stroke(RunnitTheme.rule, lineWidth: 1))
     }
 
     // MARK: - Reaction
@@ -150,7 +150,7 @@ struct ReactionButton: View {
                 .font(.system(size: 18))
                 .padding(.horizontal, 6)
                 .padding(.vertical, 4)
-                .background(isActive ? Color(.systemGray5) : Color.clear)
+                .background(isActive ? RunnitTheme.yellow.opacity(0.45) : Color.clear)
                 .clipShape(RoundedRectangle(cornerRadius: 6))
         }
         .buttonStyle(.plain)

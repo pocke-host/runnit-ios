@@ -74,14 +74,14 @@ struct TrackView: View {
                         .font(.system(size: 16, weight: .bold))
                         .tracking(3)
                         .frame(width: 120, height: 120)
-                        .background(location.isTracking ? Color.red : Color.black)
+                        .background(location.isTracking ? Color.red : RunnitTheme.signal)
                         .foregroundStyle(.white)
                         .clipShape(Circle())
                 }
                 .padding(.bottom, 20)
             }
             .padding(.top, 16)
-            .background(.white)
+            .background(RunnitTheme.canvas)
         }
     }
 
@@ -176,9 +176,9 @@ struct LiveStat: View {
     var body: some View {
         VStack(spacing: 4) {
             Text(label)
-                .font(.system(size: 10, weight: .medium))
+                .font(.system(size: 10, weight: .bold, design: .monospaced))
                 .tracking(1)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(RunnitTheme.signal)
             Text(value)
                 .font(.system(size: 20, weight: .black))
                 .monospacedDigit()
@@ -235,7 +235,7 @@ struct SaveActivitySheet: View {
                         else { Text("SAVE RUN").font(.system(size: 13, weight: .semibold)).tracking(2) }
                     }
                     .frame(maxWidth: .infinity).frame(height: 52)
-                    .background(.black).foregroundStyle(.white)
+                    .background(RunnitTheme.signal).foregroundStyle(.white)
                 }
                 .padding(.horizontal)
                 .disabled(isSaving)

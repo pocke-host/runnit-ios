@@ -33,6 +33,8 @@ struct FeedView: View {
                         }
                     }
                     .listStyle(.plain)
+                    .scrollContentBackground(.hidden)
+                    .background(RunnitTheme.canvas)
                     .refreshable {
                         do { try await service.fetchFeed() }
                         catch { errorMessage = error.localizedDescription }
@@ -41,6 +43,7 @@ struct FeedView: View {
             }
             .navigationTitle("Feed")
             .navigationBarTitleDisplayMode(.large)
+            .background(RunnitTheme.canvas)
             .task {
                 do { try await service.fetchFeed() }
                 catch { errorMessage = error.localizedDescription }

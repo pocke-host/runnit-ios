@@ -29,7 +29,9 @@ struct PlansView: View {
                             }
                         }
                     }
-                    .listStyle(.insetGrouped)
+                    .listStyle(.plain)
+                    .scrollContentBackground(.hidden)
+                    .background(RunnitTheme.canvas)
                     .refreshable {
                         do { try await service.fetchPlans() }
                         catch { errorMessage = error.localizedDescription }
@@ -37,6 +39,7 @@ struct PlansView: View {
                 }
             }
             .navigationTitle("Training Plans")
+            .background(RunnitTheme.canvas)
             .task {
                 do { try await service.fetchPlans() }
                 catch { errorMessage = error.localizedDescription }
@@ -65,7 +68,7 @@ struct PlanRow: View {
                             .font(.system(size: 10, weight: .bold))
                             .tracking(1)
                             .padding(.horizontal, 8).padding(.vertical, 3)
-                            .background(.black)
+                            .background(RunnitTheme.signal)
                             .foregroundStyle(.white)
                     }
                 }

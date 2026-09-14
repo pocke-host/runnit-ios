@@ -94,7 +94,7 @@ struct ProfileView: View {
                         }
                         .frame(maxWidth: .infinity)
                         .padding(24)
-                        .background(.black)
+                        .background(RunnitTheme.ink)
                         .foregroundStyle(.white)
 
                         // Edit profile button
@@ -103,7 +103,7 @@ struct ProfileView: View {
                             .frame(height: 44)
                             .overlay(Rectangle().stroke(.black, lineWidth: 1))
                             .font(.system(size: 13, weight: .semibold))
-                            .foregroundStyle(.black)
+                            .foregroundStyle(RunnitTheme.signal)
                             .padding(.horizontal, 20)
                             .padding(.top, 20)
 
