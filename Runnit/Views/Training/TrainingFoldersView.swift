@@ -76,16 +76,23 @@ private struct CreateFolderSheet: View {
 }
 
 struct TrainingFolderDetailView: View {
-    let folder: TrainingFolder
+    @State var folder: TrainingFolder
     @StateObject private var service = TrainingHubService.shared
+    @StateObject private var planService = PlanService.shared
     @State private var activities: [Activity] = []
     @State private var error: String?
+    @State private var editing = false
     var body: some View {
         List {
             Section { FolderSummary(folder: folder) }
             Section("ATTACHED WORKOUTS") {
                 if folder.items.isEmpty { Text("No workouts attached yet.").foregroundStyle(RunnitTheme.muted) }
-                else { ForEach(folder.items) { item in Label("\(item.itemType.capitalized) #\(item.itemId)", systemImage: item.itemType == "ACTIVITY" ? "figure.run" : "calendar") } }
+                else { ForEach(folder.items) { item in Label("\(item.itemType.capitalized) #\(item.itemId)", systemImage: item.itemType == "ACTIVITY" ? "figure.run" : "calendar").swipeActions { Button(role: .destructive) { Task { try? await service.remove(folderId: folder.id, type: item.itemType, itemId: item.itemId); folder = service.folders.first(where: { $0.id == folder.id }) ?? folder } } label: { Label("Remove", systemImage: "trash") } } } }
+            }
+            Section("ATTACH FROM PLANS") {
+                ForEach(planService.plans) { plan in
+                    Button { Task { try? await service.add(folderId: folder.id, type: "PLAN", itemId: plan.id); folder = service.folders.first(where: { $0.id == folder.id }) ?? folder } } label: { Label(plan.title, systemImage: "calendar") }
+                }
             }
             Section("RECENT ACTIVITIES") {
                 ForEach(activities) { activity in
@@ -97,9 +104,23 @@ struct TrainingFolderDetailView: View {
         }
         .listStyle(.insetGrouped).scrollContentBackground(.hidden).background(RunnitTheme.canvas)
         .navigationTitle("Folder").navigationBarTitleDisplayMode(.inline)
+        .toolbar { ToolbarItem(placement: .topBarTrailing) { Button("Edit") { editing = true } } }
         .task { do { try await ActivityService.shared.fetchMyActivities(); activities = ActivityService.shared.myActivities } catch let requestError { error = requestError.localizedDescription } }
+        .task { try? await planService.fetchPlans() }
+        .sheet(isPresented: $editing) { FolderEditSheet(service: service, folder: folder) }
         .alert("Folder", isPresented: .init(get: { error != nil }, set: { _ in error = nil })) { Button("OK", role: .cancel) {} } message: { Text(error ?? "") }
     }
+}
+
+private struct FolderEditSheet: View {
+    @ObservedObject var service: TrainingHubService
+    let folder: TrainingFolder
+    @Environment(\.dismiss) private var dismiss
+    @State private var name: String
+    @State private var description: String
+    @State private var targetDate: String
+    init(service: TrainingHubService, folder: TrainingFolder) { self.service = service; self.folder = folder; _name = State(initialValue: folder.name); _description = State(initialValue: folder.description ?? ""); _targetDate = State(initialValue: folder.targetDate ?? "") }
+    var body: some View { NavigationStack { Form { TextField("Folder name", text: $name); TextField("Description", text: $description); TextField("Target date (YYYY-MM-DD)", text: $targetDate) }.navigationTitle("Edit folder").toolbar { ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }; ToolbarItem(placement: .confirmationAction) { Button("Save") { Task { try? await service.updateFolder(id: folder.id, name: name, description: description, targetDate: targetDate.isEmpty ? nil : targetDate); dismiss() } } } } } }
 }
 
 private struct FolderSummary: View {

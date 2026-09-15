@@ -131,6 +131,15 @@ private struct TrainingTabView: View {
                     }
 
                     TrainingHubLink(
+                        title: "Multisport days",
+                        subtitle: "Combine swim, bike, run, and strength activities.",
+                        icon: "figure.mixed.cardio",
+                        tint: RunnitTheme.signal
+                    ) {
+                        MultisportView()
+                    }
+
+                    TrainingHubLink(
                         title: "Run clubs",
                         subtitle: "Find the people you want to run with.",
                         icon: "person.3",

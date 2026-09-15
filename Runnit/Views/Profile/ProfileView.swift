@@ -162,6 +162,18 @@ struct ProfileView: View {
                             )
                             .padding(.horizontal, 20)
 
+                            NavigationLink(destination: IntegrationCenterView()) {
+                                HStack {
+                                    Image(systemName: "slider.horizontal.3")
+                                    Text("Manage integrations")
+                                    Spacer()
+                                    Image(systemName: "chevron.right").font(.caption).foregroundStyle(RunnitTheme.muted)
+                                }
+                                .padding(.vertical, 14)
+                                .foregroundStyle(RunnitTheme.ink)
+                            }
+                            .padding(.horizontal, 20)
+
                             if let msg = syncMessage {
                                 Text(msg)
                                     .font(.system(size: 12))
