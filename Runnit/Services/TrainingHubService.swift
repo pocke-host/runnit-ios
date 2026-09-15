@@ -165,11 +165,12 @@ final class TrainingHubService: ObservableObject {
     func removeBookmark(_ id: Int) async throws { try await api.requestVoid("/race-bookmarks/\(id)", method: "DELETE"); bookmarks.removeAll { $0.id == id } }
 
     func fetchCalendar(start: String, end: String) async throws { events = try await api.request("/workout-events?start=\(start)&end=\(end)") }
-    func updateCalendarEvent(id: Int, completed: Bool, title: String? = nil) async throws {
-        struct Body: Encodable { let completed: Bool; let title: String? }
-        let updated: WorkoutEvent = try await api.request("/workout-events/\(id)", method: "PUT", body: Body(completed: completed, title: title))
+    func updateCalendarEvent(id: Int, completed: Bool, title: String? = nil, plannedDate: String? = nil) async throws {
+        struct Body: Encodable { let completed: Bool; let title: String?; let plannedDate: String? }
+        let updated: WorkoutEvent = try await api.request("/workout-events/\(id)", method: "PUT", body: Body(completed: completed, title: title, plannedDate: plannedDate))
         if let i = events.firstIndex(where: { $0.id == id }) { events[i] = updated }
     }
+    func reschedule(eventId: Int, to date: String) async throws { guard let event = events.first(where: { $0.id == eventId }) else { return }; try await updateCalendarEvent(id: eventId, completed: event.completed, title: event.title, plannedDate: date) }
     func deleteCalendarEvent(id: Int) async throws { try await api.requestVoid("/workout-events/\(id)", method: "DELETE"); events.removeAll { $0.id == id } }
     func fetchStrength() async throws {
         async let e: [String] = api.request("/strength/exercises")
