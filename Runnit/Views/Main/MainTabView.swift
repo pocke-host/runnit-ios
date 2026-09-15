@@ -24,7 +24,7 @@ struct MainTabView: View {
                 .tabItem { Label("Track", systemImage: "record.circle") }
                 .tag(2)
 
-            EventsView()
+            NativeCalendarView()
                 .tabItem { Label("Calendar", systemImage: "calendar") }
                 .tag(3)
 
@@ -105,11 +105,29 @@ private struct TrainingTabView: View {
 
                     TrainingHubLink(
                         title: "Races & events",
-                        subtitle: "Find your next start line and manage RSVPs.",
+                        subtitle: "Find your next start line and keep race history together.",
                         icon: "flag.checkered",
                         tint: RunnitTheme.yellow
                     ) {
-                        EventsView()
+                        NativeRacesView()
+                    }
+
+                    TrainingHubLink(
+                        title: "Training folders",
+                        subtitle: "Group every workout around a race or season.",
+                        icon: "folder",
+                        tint: RunnitTheme.yellow
+                    ) {
+                        TrainingFoldersView()
+                    }
+
+                    TrainingHubLink(
+                        title: "Strength journal",
+                        subtitle: "Track volume, progress, and personal records.",
+                        icon: "figure.strengthtraining.traditional",
+                        tint: RunnitTheme.ink
+                    ) {
+                        StrengthJournalView()
                     }
 
                     TrainingHubLink(
