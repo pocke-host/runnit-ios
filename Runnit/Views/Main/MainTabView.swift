@@ -41,10 +41,22 @@ struct MainTabView: View {
             UITabBar.appearance().standardAppearance = appearance
             UITabBar.appearance().scrollEdgeAppearance = appearance
         }
-        .overlay(alignment: .bottomTrailing) {
-            ComposeButton { showCreateSheet = true }
-                .padding(.trailing, 20)
-                .padding(.bottom, 90)
+        .overlay(alignment: .bottom) {
+            Button {
+                selectedTab = 2
+            } label: {
+                Image(systemName: "play.fill")
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundStyle(.white)
+                    .frame(width: 54, height: 54)
+                    .background(RunnitTheme.signal)
+                    .clipShape(Circle())
+                    .overlay(Circle().stroke(RunnitTheme.canvas, lineWidth: 3))
+                    .shadow(color: RunnitTheme.ink.opacity(0.28), radius: 6, y: 3)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Track activity")
+            .offset(y: -24)
         }
         .confirmationDialog("Create", isPresented: $showCreateSheet) {
             Button("New Story") { createTarget = .story }
