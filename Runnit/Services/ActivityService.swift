@@ -1,5 +1,41 @@
 import Foundation
 
+struct WeeklyExerciseSummary: Decodable {
+    let weekStart: String
+    let weekEnd: String
+    let totalDurationSeconds: Int
+    let activityCount: Int
+    let daily: [DailyExerciseSummary]
+    let bySport: [ExerciseBreakdown]
+    let bySource: [SourceExerciseBreakdown]
+
+    var formattedTotal: String {
+        let hours = totalDurationSeconds / 3600
+        let minutes = (totalDurationSeconds % 3600) / 60
+        if hours > 0 { return "\(hours)h \(minutes)m" }
+        return "\(minutes)m"
+    }
+}
+
+struct DailyExerciseSummary: Decodable, Identifiable {
+    let date: String
+    let durationSeconds: Int
+    let activityCount: Int
+    var id: String { date }
+}
+
+struct ExerciseBreakdown: Decodable, Identifiable {
+    let sport: String
+    let durationSeconds: Int
+    var id: String { sport }
+}
+
+struct SourceExerciseBreakdown: Decodable, Identifiable {
+    let source: String
+    let durationSeconds: Int
+    var id: String { source }
+}
+
 @MainActor
 final class ActivityService: ObservableObject {
     static let shared = ActivityService()
@@ -45,6 +81,13 @@ final class ActivityService: ObservableObject {
         struct Page: Decodable { let content: [Activity] }
         let page: Page = try await api.request("/activities?page=\(page)&size=20")
         myActivities = page.content
+    }
+
+    func fetchWeeklySummary(weekStart: String? = nil) async throws -> WeeklyExerciseSummary {
+        let timezone = TimeZone.current.identifier.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "UTC"
+        var path = "/activities/summary/weekly?timezone=\(timezone)"
+        if let weekStart { path += "&weekStart=\(weekStart)" }
+        return try await api.request(path)
     }
 
     // MARK: - Single activity

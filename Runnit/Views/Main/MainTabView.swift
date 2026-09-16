@@ -77,12 +77,15 @@ struct MainTabView: View {
 private struct TrainingTabView: View {
     @EnvironmentObject private var auth: AuthService
     @StateObject private var activityService = ActivityService.shared
+    @State private var weeklySummary: WeeklyExerciseSummary?
+    @State private var weeklySummaryFailed = false
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     homeHero
+                    weeklyExerciseCard
                     dailyFocus
                     VStack(alignment: .leading, spacing: 8) {
                         RunnitSectionLabel(text: "YOUR TRAINING")
@@ -162,8 +165,83 @@ private struct TrainingTabView: View {
             .background(RunnitTheme.canvas)
             .navigationTitle("Home")
             .navigationBarTitleDisplayMode(.large)
-            .task { try? await activityService.fetchMyActivities() }
+            .task {
+                do {
+                    async let activities: Void = activityService.fetchMyActivities()
+                    async let summary = activityService.fetchWeeklySummary()
+                    _ = try await activities
+                    weeklySummary = try await summary
+                } catch {
+                    weeklySummaryFailed = true
+                }
+            }
         }
+    }
+
+    private var weeklyExerciseCard: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(alignment: .firstTextBaseline) {
+                RunnitSectionLabel(text: "THIS WEEK")
+                Spacer()
+                if let summary = weeklySummary {
+                    Text("\(summary.activityCount) ACTIVITIES")
+                        .font(.system(size: 9, weight: .bold, design: .monospaced))
+                        .foregroundStyle(RunnitTheme.muted)
+                }
+            }
+            if let summary = weeklySummary {
+                HStack(alignment: .bottom, spacing: 12) {
+                    Text(summary.formattedTotal)
+                        .font(.system(size: 34, weight: .black, design: .rounded))
+                        .foregroundStyle(RunnitTheme.ink)
+                    Text("total exercise")
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundStyle(RunnitTheme.muted)
+                        .padding(.bottom, 5)
+                }
+                HStack(spacing: 4) {
+                    ForEach(summary.daily) { day in
+                        VStack(spacing: 5) {
+                            GeometryReader { proxy in
+                                let maxSeconds = max(summary.daily.map(\.durationSeconds).max() ?? 1, 1)
+                                RoundedRectangle(cornerRadius: 3)
+                                    .fill(day.durationSeconds > 0 ? RunnitTheme.signal : RunnitTheme.rule)
+                                    .frame(height: max(6, proxy.size.height * CGFloat(day.durationSeconds) / CGFloat(maxSeconds)))
+                                    .frame(maxHeight: .infinity, alignment: .bottom)
+                            }
+                            .frame(height: 42)
+                            Text(String(day.date.suffix(2)))
+                                .font(.system(size: 9, design: .monospaced))
+                                .foregroundStyle(RunnitTheme.muted)
+                        }
+                        .frame(maxWidth: .infinity)
+                    }
+                }
+                if !summary.bySport.isEmpty {
+                    Text(summary.bySport.map { "\($0.sport.capitalized) \(shortDuration($0.durationSeconds))" }.joined(separator: "  ·  "))
+                        .font(.system(size: 11, weight: .medium, design: .monospaced))
+                        .foregroundStyle(RunnitTheme.muted)
+                        .lineLimit(2)
+                }
+            } else if weeklySummaryFailed {
+                Text("We couldn’t load this week’s total. Pull to refresh or check your connections.")
+                    .font(.system(size: 13))
+                    .foregroundStyle(RunnitTheme.muted)
+            } else {
+                ProgressView().tint(RunnitTheme.signal)
+            }
+        }
+        .padding(18)
+        .background(Color.white)
+        .overlay(Rectangle().stroke(RunnitTheme.rule))
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(weeklySummary.map { "This week, \($0.formattedTotal) total exercise across \($0.activityCount) activities" } ?? "Loading this week’s exercise total")
+    }
+
+    private func shortDuration(_ seconds: Int) -> String {
+        let hours = seconds / 3600
+        let minutes = (seconds % 3600) / 60
+        return hours > 0 ? "\(hours)h \(minutes)m" : "\(minutes)m"
     }
 
     private var homeHero: some View {
