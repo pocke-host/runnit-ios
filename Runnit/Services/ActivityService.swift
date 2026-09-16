@@ -4,6 +4,8 @@ struct WeeklyExerciseSummary: Decodable {
     let weekStart: String
     let weekEnd: String
     let totalDurationSeconds: Int
+    let previousTotalDurationSeconds: Int?
+    let changePercent: Int?
     let activityCount: Int
     let daily: [DailyExerciseSummary]
     let bySport: [ExerciseBreakdown]

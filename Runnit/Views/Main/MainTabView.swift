@@ -199,6 +199,11 @@ private struct TrainingTabView: View {
                         .foregroundStyle(RunnitTheme.muted)
                         .padding(.bottom, 5)
                 }
+                if let change = summary.changePercent, change != 0 {
+                    Text("\(change > 0 ? "↑" : "↓") \(abs(change))% vs last week")
+                        .font(.system(size: 11, weight: .bold, design: .monospaced))
+                        .foregroundStyle(change > 0 ? RunnitTheme.signal : RunnitTheme.muted)
+                }
                 HStack(spacing: 4) {
                     ForEach(summary.daily) { day in
                         VStack(spacing: 5) {
