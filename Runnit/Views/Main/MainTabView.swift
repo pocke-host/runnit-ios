@@ -77,6 +77,7 @@ struct MainTabView: View {
 private struct TrainingTabView: View {
     @EnvironmentObject private var auth: AuthService
     @StateObject private var activityService = ActivityService.shared
+    @StateObject private var integrationService = IntegrationService.shared
     @State private var weeklySummary: WeeklyExerciseSummary?
     @State private var weeklySummaryFailed = false
 
@@ -169,8 +170,10 @@ private struct TrainingTabView: View {
                 do {
                     async let activities: Void = activityService.fetchMyActivities()
                     async let summary = activityService.fetchWeeklySummary()
+                    async let integrations: Void = integrationService.refresh()
                     _ = try await activities
                     weeklySummary = try await summary
+                    _ = await integrations
                 } catch {
                     weeklySummaryFailed = true
                 }
@@ -204,13 +207,23 @@ private struct TrainingTabView: View {
                         .font(.system(size: 11, weight: .bold, design: .monospaced))
                         .foregroundStyle(change > 0 ? RunnitTheme.signal : RunnitTheme.muted)
                 }
+                if (summary.plannedCount ?? 0) > 0 {
+                    Text("Planned \(shortDuration((summary.plannedDurationMinutes ?? 0) * 60)) · Completed \(shortDuration((summary.completedPlannedDurationMinutes ?? 0) * 60))")
+                        .font(.system(size: 10, weight: .medium, design: .monospaced))
+                        .foregroundStyle(RunnitTheme.muted)
+                }
+                if let freshness = integrationFreshnessLabel {
+                    Text(freshness)
+                        .font(.system(size: 10, weight: .medium, design: .monospaced))
+                        .foregroundStyle(RunnitTheme.muted)
+                }
                 HStack(spacing: 4) {
                     ForEach(summary.daily) { day in
                         VStack(spacing: 5) {
                             GeometryReader { proxy in
                                 let maxSeconds = max(summary.daily.map(\.durationSeconds).max() ?? 1, 1)
                                 RoundedRectangle(cornerRadius: 3)
-                                    .fill(day.durationSeconds > 0 ? RunnitTheme.signal : RunnitTheme.rule)
+                                    .fill(day.date == todayKey ? RunnitTheme.yellow : day.durationSeconds > 0 ? RunnitTheme.signal : RunnitTheme.rule)
                                     .frame(height: max(6, proxy.size.height * CGFloat(day.durationSeconds) / CGFloat(maxSeconds)))
                                     .frame(maxHeight: .infinity, alignment: .bottom)
                             }
@@ -228,6 +241,9 @@ private struct TrainingTabView: View {
                         .foregroundStyle(RunnitTheme.muted)
                         .lineLimit(2)
                 }
+                NavigationLink("View history →", destination: FeedView())
+                    .font(.system(size: 11, weight: .bold, design: .monospaced))
+                    .foregroundStyle(RunnitTheme.signal)
             } else if weeklySummaryFailed {
                 Text("We couldn’t load this week’s total. Pull to refresh or check your connections.")
                     .font(.system(size: 13))
@@ -247,6 +263,20 @@ private struct TrainingTabView: View {
         let hours = seconds / 3600
         let minutes = (seconds % 3600) / 60
         return hours > 0 ? "\(hours)h \(minutes)m" : "\(minutes)m"
+    }
+
+    private var integrationFreshnessLabel: String? {
+        let connected = integrationService.statuses.values.filter { $0.connected }
+        guard !connected.isEmpty else { return nil }
+        return connected.contains(where: { $0.lastSync == nil || $0.needsReconnect == true })
+            ? "A connected source needs a sync"
+            : "Connected sources up to date"
+    }
+
+    private var todayKey: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.string(from: Date())
     }
 
     private var homeHero: some View {

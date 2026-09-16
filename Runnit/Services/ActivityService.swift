@@ -6,6 +6,9 @@ struct WeeklyExerciseSummary: Decodable {
     let totalDurationSeconds: Int
     let previousTotalDurationSeconds: Int?
     let changePercent: Int?
+    let plannedDurationMinutes: Int?
+    let completedPlannedDurationMinutes: Int?
+    let plannedCount: Int?
     let activityCount: Int
     let daily: [DailyExerciseSummary]
     let bySport: [ExerciseBreakdown]
