@@ -134,6 +134,8 @@ struct CreateActivityBody: Encodable {
     let heartRateAvg: Int?
     let calories: Int?
     let date: String
+    let source: String?
+    let externalId: String?
     let routePoints: [RoutePointBody]?
     let listeningTrack: String?
     let listeningArtist: String?

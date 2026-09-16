@@ -14,7 +14,7 @@ enum DeepLinkHandler {
     }
 
     private static func handleOAuth(_ url: URL) {
-        // e.g. runnit://oauth/strava?code=abc&state=xyz
+        // e.g. runnit://oauth/coros?code=abc&state=xyz
         let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
         let code  = components?.queryItems?.first(where: { $0.name == "code" })?.value
         let state = components?.queryItems?.first(where: { $0.name == "state" })?.value
