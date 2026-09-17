@@ -10,6 +10,7 @@ struct TrackView: View {
     @State private var showSaveSheet = false
     @State private var isSaving = false
     @State private var errorMessage: String?
+    @State private var saveSummary: String?
 
     private let activityTypes = ["RUN", "RIDE", "WALK", "HIKE", "SWIM"]
 
@@ -37,6 +38,9 @@ struct TrackView: View {
                     onDiscard: discardSession
                 )
             }
+            .alert("Activity saved", isPresented: .init(get: { saveSummary != nil }, set: { _ in saveSummary = nil })) {
+                Button("Done", role: .cancel) {}
+            } message: { Text(saveSummary ?? "Your training has been added to your week.") }
         }
     }
 
@@ -141,6 +145,7 @@ struct TrackView: View {
             let saved = try await activityService.createActivity(body)
             activityService.feed.insert(saved, at: 0)
             showSaveSheet = false
+            saveSummary = "\(formatElapsed(location.elapsedSeconds)) of \(selectedType.lowercased()) is now in your Runnit history. Keep the momentum going."
         } catch {
             errorMessage = error.localizedDescription
         }

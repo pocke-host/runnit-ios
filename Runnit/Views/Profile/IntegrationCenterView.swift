@@ -28,6 +28,8 @@ struct IntegrationCenterView: View {
             VStack(alignment: .leading, spacing: 3) {
                 Text(name).font(.headline)
                 Text(statusLine(status)).font(.caption).foregroundStyle(status?.connected == true ? .green : RunnitTheme.muted)
+                Text(status?.connected == true ? "Permission active · Runnit can sync this source" : "Permission needed · connect to import training")
+                    .font(.caption2).foregroundStyle(status?.connected == true ? RunnitTheme.muted : .orange)
                 if let sync = status?.lastSync { Text("Last sync \(sync)").font(.caption2).foregroundStyle(RunnitTheme.muted) }
             }
             Spacer()
