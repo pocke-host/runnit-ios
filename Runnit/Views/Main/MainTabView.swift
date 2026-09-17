@@ -303,16 +303,16 @@ private struct TrainingTabView: View {
     private var dailyFocus: some View {
         VStack(alignment: .leading, spacing: 12) {
             RunnitSectionLabel(text: "YOUR DAY IN TRAINING")
-            Text("Keep the momentum moving.")
+            Text(dailyFocusTitle)
                 .font(.system(size: 22, weight: .black, design: .rounded))
                 .foregroundStyle(RunnitTheme.ink)
-            Text("No workout is scheduled yet. Start with a plan or record what you do today.")
+            Text(dailyFocusDescription)
                 .font(.system(size: 14))
                 .foregroundStyle(RunnitTheme.muted)
                 .fixedSize(horizontal: false, vertical: true)
             HStack(spacing: 12) {
-                NavigationLink(destination: TrackView()) {
-                    Text("START TODAY’S WORKOUT →")
+                NavigationLink(destination: dailyPrimaryDestination) {
+                    Text(dailyFocusActionLabel)
                         .font(.system(size: 10, weight: .bold, design: .monospaced))
                         .tracking(0.8)
                         .frame(maxWidth: .infinity)
@@ -335,6 +335,35 @@ private struct TrainingTabView: View {
         .padding(18)
         .background(Color.white)
         .overlay(Rectangle().stroke(RunnitTheme.rule))
+    }
+
+    @ViewBuilder
+    private var dailyPrimaryDestination: some View {
+        if integrationService.statuses.values.contains(where: { $0.needsReconnect == true }) {
+            IntegrationCenterView()
+        } else if (weeklySummary?.activityCount ?? 0) > 0 {
+            FeedView()
+        } else {
+            TrackView()
+        }
+    }
+
+    private var dailyFocusTitle: String {
+        if integrationService.statuses.values.contains(where: { $0.needsReconnect == true }) { return "Keep your training connected." }
+        if (weeklySummary?.activityCount ?? 0) > 0 { return "See how your week is moving." }
+        return "Make your first move."
+    }
+
+    private var dailyFocusDescription: String {
+        if integrationService.statuses.values.contains(where: { $0.needsReconnect == true }) { return "One of your connected sources needs attention before your dashboard can stay current." }
+        if (weeklySummary?.activityCount ?? 0) > 0 { return "Your latest training is in. Review the week, then decide what comes next." }
+        return "Record one activity and your dashboard will start shaping itself around your training."
+    }
+
+    private var dailyFocusActionLabel: String {
+        if integrationService.statuses.values.contains(where: { $0.needsReconnect == true }) { return "RECONNECT A DEVICE →" }
+        if (weeklySummary?.activityCount ?? 0) > 0 { return "REVIEW YOUR PROGRESS →" }
+        return "RECORD TODAY’S ACTIVITY →"
     }
 
     private var firstName: String {
