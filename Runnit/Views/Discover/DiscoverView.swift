@@ -41,11 +41,7 @@ struct DiscoverView: View {
                         ProgressView()
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                     } else if query.isEmpty {
-                        ContentUnavailableView(
-                            "Find Athletes",
-                            systemImage: "person.2",
-                            description: Text("Search by name or @username to find athletes to follow.")
-                        )
+                        ContentUnavailableView("Find Athletes", systemImage: "person.2", description: Text("Search by name or @username to find athletes to follow."))
                     } else if service.searchResults.isEmpty {
                         ContentUnavailableView(
                             "No athletes found",
@@ -129,9 +125,21 @@ struct UserRow: View {
                         .font(.system(size: 12))
                         .foregroundStyle(RunnitTheme.muted)
                 }
+                if let count = user.activityCount {
+                    Text("\(count) activities · \(user.followerCount ?? 0) followers")
+                        .font(.system(size: 11, weight: .medium, design: .monospaced))
+                        .foregroundStyle(RunnitTheme.signal)
+                }
             }
 
             Spacer()
+
+            ShareLink(item: "Join me on Runnit and follow @\(user.user): https://runnit.live/profile/\(user.id)") {
+                Image(systemName: "square.and.arrow.up")
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundStyle(RunnitTheme.signal)
+            }
+            .accessibilityLabel("Share \(user.displayName)'s profile")
 
             Button(action: toggleFollow) {
                 Group {

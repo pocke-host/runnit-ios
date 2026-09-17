@@ -9,6 +9,7 @@ struct UserSummary: Codable, Identifiable {
     let sport: String?
     let followerCount: Int?
     let followingCount: Int?
+    let activityCount: Int?
     var isFollowing: Bool?
 
     var avatarURL: URL? { avatarUrl.flatMap(URL.init) }

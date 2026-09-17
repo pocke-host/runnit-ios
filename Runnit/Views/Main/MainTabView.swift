@@ -153,6 +153,15 @@ private struct TrainingTabView: View {
                     }
 
                     TrainingHubLink(
+                        title: "Challenges",
+                        subtitle: "Find a shared goal, invite your crew, and celebrate the finish.",
+                        icon: "trophy",
+                        tint: RunnitTheme.yellow
+                    ) {
+                        NativeChallengesView()
+                    }
+
+                    TrainingHubLink(
                         title: "Find athletes",
                         subtitle: "Discover people who move like you.",
                         icon: "person.2",
@@ -462,5 +471,111 @@ private struct ComposeButton: View {
                 .shadow(color: .black.opacity(0.25), radius: 8, x: 0, y: 4)
         }
         .buttonStyle(.plain)
+    }
+}
+
+private struct NativeChallenge: Codable, Identifiable {
+    let id: Int
+    let name: String
+    let description: String?
+    let sport: String?
+    let imageUrl: String?
+    let endDate: Date?
+    let prize: String?
+    let participantCount: Int
+}
+
+@MainActor
+private final class NativeChallengeService: ObservableObject {
+    @Published var challenges: [NativeChallenge] = []
+    @Published var enteredIds = Set<Int>()
+    private let api = APIClient.shared
+
+    func load() async throws {
+        challenges = try await api.request("/challenges")
+        let mine: [NativeChallenge] = try await api.request("/challenges/my")
+        enteredIds = Set(mine.map(\.id))
+    }
+
+    func toggle(_ challenge: NativeChallenge) async throws {
+        if enteredIds.contains(challenge.id) {
+            try await api.requestVoid("/challenges/\(challenge.id)/leave", method: "DELETE")
+            enteredIds.remove(challenge.id)
+        } else {
+            try await api.requestVoid("/challenges/\(challenge.id)/enter", method: "POST")
+            enteredIds.insert(challenge.id)
+        }
+    }
+}
+
+private struct NativeChallengesView: View {
+    @StateObject private var service = NativeChallengeService()
+    @State private var errorMessage: String?
+    @State private var loadingId: Int?
+
+    var body: some View {
+        ScrollView {
+            LazyVStack(spacing: 14) {
+                if service.challenges.isEmpty {
+                    ContentUnavailableView("No challenges yet", systemImage: "trophy", description: Text("New community challenges will show up here."))
+                } else {
+                    ForEach(service.challenges) { challenge in
+                        challengeCard(challenge)
+                    }
+                }
+            }
+            .padding(20)
+        }
+        .background(RunnitTheme.canvas)
+        .navigationTitle("Challenges")
+        .navigationBarTitleDisplayMode(.large)
+        .task {
+            do { try await service.load() } catch { errorMessage = error.localizedDescription }
+        }
+        .refreshable {
+            do { try await service.load() } catch { errorMessage = error.localizedDescription }
+        }
+        .alert("Couldn’t update challenge", isPresented: .init(get: { errorMessage != nil }, set: { _ in errorMessage = nil })) { Button("OK", role: .cancel) {} } message: { Text(errorMessage ?? "") }
+    }
+
+    private func challengeCard(_ challenge: NativeChallenge) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(challenge.name).font(.system(size: 18, weight: .black, design: .rounded)).foregroundStyle(RunnitTheme.ink)
+                    if let sport = challenge.sport { Text(sport.uppercased()).font(.system(size: 10, weight: .bold, design: .monospaced)).foregroundStyle(RunnitTheme.signal) }
+                }
+                Spacer()
+                ShareLink(item: "Join me in the Runnit challenge \"\(challenge.name)\": https://runnit.live/challenges/\(challenge.id)") {
+                    Image(systemName: "square.and.arrow.up").foregroundStyle(RunnitTheme.signal)
+                }
+                .accessibilityLabel("Share \(challenge.name) challenge")
+            }
+            if let description = challenge.description { Text(description).font(.system(size: 13)).foregroundStyle(RunnitTheme.muted) }
+            HStack {
+                Label("\(challenge.participantCount) joined", systemImage: "person.2")
+                if let endDate = challenge.endDate { Label("Ends \(endDate.formatted(.dateTime.month(.abbreviated).day()))", systemImage: "clock") }
+            }
+            .font(.system(size: 11, weight: .medium, design: .monospaced)).foregroundStyle(RunnitTheme.muted)
+            Button {
+                loadingId = challenge.id
+                Task {
+                    do { try await service.toggle(challenge) } catch { errorMessage = error.localizedDescription }
+                    loadingId = nil
+                }
+            } label: {
+                Group {
+                    if loadingId == challenge.id { ProgressView().frame(maxWidth: .infinity) }
+                    else { Text(service.enteredIds.contains(challenge.id) ? "LEAVE CHALLENGE" : "JOIN CHALLENGE") .frame(maxWidth: .infinity) }
+                }
+                .font(.system(size: 11, weight: .bold, design: .monospaced)).frame(height: 42)
+                .background(service.enteredIds.contains(challenge.id) ? RunnitTheme.canvas : RunnitTheme.signal)
+                .foregroundStyle(service.enteredIds.contains(challenge.id) ? RunnitTheme.ink : .white)
+                .overlay(Rectangle().stroke(RunnitTheme.rule))
+            }
+            .buttonStyle(.plain)
+            .disabled(loadingId != nil)
+        }
+        .padding(18).background(Color.white).overlay(Rectangle().stroke(RunnitTheme.rule))
     }
 }

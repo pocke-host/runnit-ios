@@ -21,6 +21,12 @@ struct Comment: Codable, Identifiable {
     var userAvatarUrl: String? { user?.avatarUrl }
 }
 
+struct GifResult: Codable, Identifiable {
+    let id: String
+    let title: String?
+    let url: String
+}
+
 @MainActor
 final class CommentService: ObservableObject {
     private let api = APIClient.shared
@@ -34,12 +40,22 @@ final class CommentService: ObservableObject {
         comments = try await api.request("/activities/\(activityId)/comments")
     }
 
-    func postComment(activityId: Int, content: String, parentId: Int? = nil) async throws -> Comment {
-        struct Body: Encodable { let text: String; let parentId: Int? }
+    func searchGifs(query: String) async throws -> [GifResult] {
+        let encoded = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? query
+        return try await api.request("/giphy/search?q=\(encoded)", authenticated: true)
+    }
+
+    func postComment(activityId: Int, content: String, parentId: Int? = nil, mediaUrl: String? = nil, mediaType: String? = nil) async throws -> Comment {
+        struct Body: Encodable {
+            let text: String
+            let parentId: Int?
+            let mediaUrl: String?
+            let mediaType: String?
+        }
         let comment: Comment = try await api.request(
             "/activities/\(activityId)/comments",
             method: "POST",
-            body: Body(text: content, parentId: parentId)
+            body: Body(text: content, parentId: parentId, mediaUrl: mediaUrl, mediaType: mediaType)
         )
         comments.append(comment)
         return comment
