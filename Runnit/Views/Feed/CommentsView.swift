@@ -6,6 +6,7 @@ struct CommentsView: View {
     @State private var newComment = ""
     @State private var isPosting = false
     @State private var errorMessage: String?
+    @State private var replyTo: Comment?
     @FocusState private var inputFocused: Bool
 
     var body: some View {
@@ -25,7 +26,7 @@ struct CommentsView: View {
                     ScrollView {
                         LazyVStack(alignment: .leading, spacing: 20) {
                             ForEach(service.comments) { comment in
-                                CommentRow(comment: comment)
+                                CommentRow(comment: comment, onReply: { replyTo = comment })
                             }
                         }
                         .padding(16)
@@ -37,7 +38,7 @@ struct CommentsView: View {
 
             // Input bar
             HStack(alignment: .bottom, spacing: 12) {
-                TextField("Add a comment...", text: $newComment, axis: .vertical)
+                TextField(replyTo == nil ? "Add a comment..." : "Reply to \(replyTo?.userDisplayName ?? "athlete")…", text: $newComment, axis: .vertical)
                     .lineLimit(1...5)
                     .focused($inputFocused)
                     .padding(.vertical, 10)
@@ -58,6 +59,7 @@ struct CommentsView: View {
             .padding(.horizontal, 16)
             .padding(.top, 8)
             .padding(.bottom, 8)
+            if replyTo != nil { Text("Replying to a comment").font(.caption).foregroundStyle(RunnitTheme.muted).padding(.bottom, 4) }
         }
         .navigationTitle("Comments")
         .navigationBarTitleDisplayMode(.inline)
@@ -85,7 +87,8 @@ struct CommentsView: View {
         inputFocused = false
         Task {
             do {
-                _ = try await service.postComment(activityId: activityId, content: text)
+                _ = try await service.postComment(activityId: activityId, content: text, parentId: replyTo?.id)
+                replyTo = nil
             } catch {
                 errorMessage = error.localizedDescription
             }
@@ -96,6 +99,7 @@ struct CommentsView: View {
 
 struct CommentRow: View {
     let comment: Comment
+    let onReply: () -> Void
 
     var body: some View {
         HStack(alignment: .top, spacing: 10) {
@@ -126,7 +130,10 @@ struct CommentRow: View {
                 Text(comment.content)
                     .font(.system(size: 14))
                     .fixedSize(horizontal: false, vertical: true)
+                Button("Reply", action: onReply)
+                    .font(.system(size: 11, weight: .bold, design: .monospaced))
+                    .foregroundStyle(RunnitTheme.signal)
             }
-        }
+        }.padding(.leading, comment.parentId == nil ? 0 : 24)
     }
 }
