@@ -14,15 +14,7 @@ struct PaywallView: View {
                 VStack(spacing: 32) {
                     header
                     featureList
-                    if let offering = purchases.offerings?.current {
-                        packagePicker(offering: offering)
-                        subscribeButton(offering: offering)
-                    } else {
-                        ProgressView()
-                            .padding(.top, 40)
-                    }
-                    restoreButton
-                    legalText
+                    freeAccessCard
                 }
                 .padding(.horizontal, 24)
                 .padding(.bottom, 40)
@@ -35,7 +27,6 @@ struct PaywallView: View {
                 }
             }
         }
-        .task { await purchases.fetchOfferings() }
         .alert("Something went wrong", isPresented: $showError) {
             Button("OK", role: .cancel) {}
         } message: {
@@ -52,10 +43,10 @@ struct PaywallView: View {
                 .foregroundStyle(RunnitTheme.signal)
                 .padding(.top, 16)
 
-            Text("Go Premium")
+            Text("Runnit is free for athletes")
                 .font(.system(size: 28, weight: .black, design: .rounded))
 
-            Text("Unlock the full Runnit experience")
+            Text("Track, connect, plan, and train with your crew without a subscription or paywall.")
                 .font(.subheadline)
                 .foregroundStyle(RunnitTheme.muted)
                 .multilineTextAlignment(.center)
@@ -64,16 +55,28 @@ struct PaywallView: View {
 
     private var featureList: some View {
         VStack(alignment: .leading, spacing: 16) {
-            FeatureRow(icon: "chart.line.uptrend.xyaxis", text: "Advanced performance analytics")
-            FeatureRow(icon: "figure.run.circle.fill", text: "AI-powered training plans")
-            FeatureRow(icon: "person.2.fill", text: "Club creation & coaching tools")
-            FeatureRow(icon: "trophy.fill", text: "Unlimited challenges & leaderboards")
-            FeatureRow(icon: "waveform.path.ecg", text: "HR zone analysis & recovery insights")
+            FeatureRow(icon: "record.circle", text: "Record and sync your training")
+            FeatureRow(icon: "person.2.fill", text: "Join the community and challenges")
+            FeatureRow(icon: "calendar", text: "Use plans, folders, races, and the journal")
+            FeatureRow(icon: "heart.fill", text: "Connect your health and training devices")
         }
         .padding(20)
         .background(Color.white)
         .overlay(RoundedRectangle(cornerRadius: RunnitTheme.radius).stroke(RunnitTheme.rule))
         .clipShape(RoundedRectangle(cornerRadius: RunnitTheme.radius))
+    }
+
+    private var freeAccessCard: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("How Runnit earns")
+                .font(.system(size: 18, weight: .black, design: .rounded))
+            Text("Coaches can offer paid plans and services through Runnit. We earn a commission when a coach earns—athletes keep the core app free.")
+                .font(.subheadline)
+                .foregroundStyle(RunnitTheme.muted)
+        }
+        .padding(20)
+        .background(RunnitTheme.yellow.opacity(0.35))
+        .overlay(RoundedRectangle(cornerRadius: RunnitTheme.radius).stroke(RunnitTheme.rule))
     }
 
     private func packagePicker(offering: Offering) -> some View {
