@@ -10,6 +10,7 @@ struct IntegrationCenterView: View {
             Section("CONNECTED SERVICES") {
                 providerRow("COROS", key: "coros", icon: "watch.analog")
                 providerRow("WHOOP", key: "whoop", icon: "heart.fill")
+                providerRow("Oura Ring", key: "oura", icon: "circle.dotted")
                 providerRow("Spotify", key: "spotify", icon: "music.note")
                 providerRow("RunSignup", key: "runsignup", icon: "flag.checkered")
                 HealthStatusRow()

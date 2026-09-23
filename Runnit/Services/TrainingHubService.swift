@@ -203,12 +203,12 @@ final class IntegrationService: ObservableObject {
     func refresh() async {
         loading = true
         defer { loading = false }
-        for provider in ["whoop", "spotify", "runsignup"] {
+        for provider in ["whoop", "oura", "spotify", "runsignup"] {
             if let status: IntegrationStatus = try? await api.request("/integrations/\(provider)/status") { statuses[provider] = status }
         }
     }
     func connectURL(provider: String) async throws -> URL {
-        let path = provider == "spotify" ? "/spotify/connect" : provider == "runsignup" ? "/integrations/runsignup/oauth/connect" : "/integrations/whoop/connect"
+        let path = provider == "spotify" ? "/spotify/connect" : provider == "runsignup" ? "/integrations/runsignup/oauth/connect" : "/integrations/\(provider)/connect"
         struct Response: Decodable { let url: String }
         let response: Response = try await api.request(path)
         guard let url = URL(string: response.url) else { throw APIError.invalidURL }
@@ -221,7 +221,7 @@ final class IntegrationService: ObservableObject {
         return response.imported ?? 0
     }
     func disconnect(provider: String) async throws {
-        let path = provider == "runsignup" ? "/integrations/runsignup/disconnect" : provider == "spotify" ? "/integrations/spotify/disconnect" : "/integrations/whoop/disconnect"
+        let path = provider == "runsignup" ? "/integrations/runsignup/disconnect" : provider == "spotify" ? "/integrations/spotify/disconnect" : "/integrations/\(provider)/disconnect"
         try await api.requestVoid(path, method: "DELETE")
         statuses[provider] = IntegrationStatus(connected: false, lastSync: nil, needsReconnect: false)
     }
