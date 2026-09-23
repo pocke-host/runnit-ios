@@ -203,7 +203,7 @@ final class IntegrationService: ObservableObject {
     func refresh() async {
         loading = true
         defer { loading = false }
-        for provider in ["whoop", "oura", "spotify", "runsignup"] {
+        for provider in ["whoop", "oura", "fitbit", "spotify", "runsignup"] {
             if let status: IntegrationStatus = try? await api.request("/integrations/\(provider)/status") { statuses[provider] = status }
         }
     }
