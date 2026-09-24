@@ -255,6 +255,7 @@ final class IntegrationService: ObservableObject {
         struct Response: Decodable { let url: String }
         let response: Response = try await api.request(path)
         guard let url = URL(string: response.url) else { throw APIError.invalidURL }
+        OAuthStateStore.shared.register(provider: provider, url: url)
         return url
     }
     func sync(provider: String) async throws -> Int {

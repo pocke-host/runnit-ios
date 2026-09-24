@@ -30,6 +30,7 @@ final class CorosService: ObservableObject {
         struct Response: Decodable { let url: String }
         let res: Response = try await api.request("/integrations/coros/connect")
         guard let url = URL(string: res.url) else { throw URLError(.badURL) }
+        OAuthStateStore.shared.register(provider: "coros", url: url)
         return url
     }
 

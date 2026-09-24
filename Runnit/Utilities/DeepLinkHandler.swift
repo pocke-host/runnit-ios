@@ -1,5 +1,29 @@
 import Foundation
 
+/// Keeps the OAuth state issued for a native connection in memory and consumes it once.
+/// The backend still validates the state against the signed-in user; this local check
+/// prevents an unsolicited deep link from being forwarded to the callback endpoint.
+final class OAuthStateStore: @unchecked Sendable {
+    static let shared = OAuthStateStore()
+    private let lock = NSLock()
+    private var values: [String: (state: String, expiresAt: Date)] = [:]
+    private let lifetime: TimeInterval = 10 * 60
+
+    func register(provider: String, url: URL) {
+        guard let state = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems?.first(where: { $0.name == "state" })?.value,
+              !state.isEmpty else { return }
+        lock.lock(); defer { lock.unlock() }
+        values[provider.lowercased()] = (state, Date().addingTimeInterval(lifetime))
+    }
+
+    func consume(provider: String, state: String) -> Bool {
+        lock.lock(); defer { lock.unlock() }
+        let key = provider.lowercased()
+        guard let entry = values.removeValue(forKey: key), entry.expiresAt >= Date() else { return false }
+        return entry.state == state
+    }
+}
+
 enum DeepLinkHandler {
     /// Handles runnit:// deep links (OAuth callbacks, universal links)
     static func handle(_ url: URL) {
@@ -27,6 +51,11 @@ enum DeepLinkHandler {
 
         guard let path = callbackPath(for: provider) else {
             NotificationCenter.default.post(name: .oauthCallbackFailed, object: nil, userInfo: ["provider": provider, "reason": "unsupported_provider"])
+            return
+        }
+
+        guard OAuthStateStore.shared.consume(provider: provider, state: state) else {
+            NotificationCenter.default.post(name: .oauthCallbackFailed, object: nil, userInfo: ["provider": provider, "reason": "invalid_state"])
             return
         }
 
