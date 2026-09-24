@@ -169,6 +169,15 @@ private struct TrainingTabView: View {
                     ) {
                         DiscoverView()
                     }
+
+                    TrainingHubLink(
+                        title: "Friend progress",
+                        subtitle: "See the people you follow keeping momentum.",
+                        icon: "chart.line.uptrend.xyaxis",
+                        tint: RunnitTheme.signal
+                    ) {
+                        FriendProgressView()
+                    }
                 }
                 .padding(20)
             }
@@ -395,6 +404,34 @@ private struct TrainingTabView: View {
         let meters = activityService.myActivities.compactMap(\.distanceMeters).reduce(0, +)
         return String(format: "%.1f km", meters / 1000)
     }
+}
+
+private struct FriendProgressView: View {
+    @StateObject private var service = TrainingHubService.shared
+    @State private var friends: [FriendProgress] = []
+    @State private var error: String?
+
+    var body: some View {
+        Group {
+            if friends.isEmpty && error == nil { ContentUnavailableView("No friend progress yet", systemImage: "person.2", description: Text("Follow athletes to see their weekly momentum here.")) }
+            else if let error { ContentUnavailableView("Couldn’t load progress", systemImage: "wifi.exclamationmark", description: Text(error)) }
+            else { List(friends) { friend in progressRow(friend) }.listStyle(.plain).scrollContentBackground(.hidden) }
+        }
+        .background(RunnitTheme.canvas)
+        .navigationTitle("Friend progress")
+        .task { await load() }
+        .refreshable { await load() }
+    }
+
+    private func progressRow(_ friend: FriendProgress) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack { Text(friend.displayName).font(.headline); Spacer(); Text("\(friend.activityCount) workouts").font(.caption).foregroundStyle(RunnitTheme.muted) }
+            HStack(spacing: 16) { Label("\(friend.durationMinutes) min", systemImage: "clock"); if friend.distanceMeters > 0 { Label(String(format: "%.1f km", Double(friend.distanceMeters) / 1000), systemImage: "figure.run") } }
+                .font(.caption).foregroundStyle(RunnitTheme.muted)
+        }.padding(16).background(Color.white).overlay(Rectangle().stroke(RunnitTheme.rule))
+    }
+
+    private func load() async { do { error = nil; friends = try await service.fetchFriendProgress() } catch let requestError { friends = []; error = requestError.localizedDescription } }
 }
 
 private struct HomeStat: View {

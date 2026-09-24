@@ -73,6 +73,16 @@ struct SpotifyPlaylistResult: Codable {
     let name: String?
 }
 
+struct FriendProgress: Codable, Identifiable {
+    let id: Int
+    let displayName: String
+    let avatarUrl: String?
+    let activityCount: Int
+    let durationMinutes: Int
+    let distanceMeters: Int
+    let days: Int
+}
+
 struct RaceListing: Decodable, Identifiable {
     let id: String
     let name: String
@@ -177,6 +187,7 @@ final class TrainingHubService: ObservableObject {
         struct Body: Encodable { let period: String }
         return try await api.request("/spotify/playlists/from-history", method: "POST", body: Body(period: period))
     }
+    func fetchFriendProgress(days: Int = 7) async throws -> [FriendProgress] { try await api.request("/friends/progress?days=\(days)") }
     func discoverResults(provider: String, raceId: String?, eventId: String?) async throws -> [OfficialResultCandidate] {
         var path = "/race-results/discover?provider=\(provider)"
         if let raceId, !raceId.isEmpty { path += "&raceId=\(raceId)" }
