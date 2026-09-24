@@ -145,6 +145,7 @@ final class TrainingHubService: ObservableObject {
         async let r: [RaceResult] = api.request("/race-results")
         bookmarks = try await b; results = try await r
     }
+    func fetchResultProviders() async throws -> [String] { try await api.request("/race-results/providers") }
     func discoverResults(provider: String, raceId: String?, eventId: String?) async throws -> [OfficialResultCandidate] {
         var path = "/race-results/discover?provider=\(provider)"
         if let raceId, !raceId.isEmpty { path += "&raceId=\(raceId)" }

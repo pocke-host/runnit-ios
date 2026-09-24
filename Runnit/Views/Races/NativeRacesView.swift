@@ -31,6 +31,7 @@ private struct RaceResultImportView: View {
     @ObservedObject var service: TrainingHubService
     @Environment(\.dismiss) private var dismiss
     @State private var provider = "ATHLINKS"
+    @State private var providers = ["ATHLINKS", "RUNSIGNUP"]
     @State private var raceId = ""
     @State private var eventId = ""
     @State private var candidates: [OfficialResultCandidate] = []
@@ -40,8 +41,8 @@ private struct RaceResultImportView: View {
         NavigationStack {
             Form {
                 Section("1 · CHOOSE PROVIDER") {
-                    Picker("Timing provider", selection: $provider) { Text("Athlinks").tag("ATHLINKS"); Text("RunSignup").tag("RUNSIGNUP") }
-                    if provider == "RUNSIGNUP" { TextField("Race ID (optional)", text: $raceId); TextField("Event ID (optional)", text: $eventId) }
+                    Picker("Timing provider", selection: $provider) { ForEach(providers, id: \.self) { value in Text(providerLabel(value)).tag(value) } }
+                    if provider == "RUNSIGNUP" || provider == "RACEROSTER" { TextField(provider == "RACEROSTER" ? "Results race ID" : "Race ID", text: $raceId); TextField("Event ID", text: $eventId) }
                 }
                 Section("2 · FIND RESULTS") {
                     Button(isSearching ? "Searching…" : "Find my official results") { Task { await search() } }.disabled(isSearching)
@@ -51,10 +52,12 @@ private struct RaceResultImportView: View {
                 }
             }
             .navigationTitle("Official result")
+            .task { if let loaded = try? await service.fetchResultProviders(), !loaded.isEmpty { providers = loaded; if !loaded.contains(provider) { provider = loaded[0] } } }
             .toolbar { ToolbarItem(placement: .cancellationAction) { Button("Done") { dismiss() } } }
             .alert("Race result", isPresented: .init(get: { message != nil }, set: { _ in message = nil })) { Button("OK", role: .cancel) {} } message: { Text(message ?? "") }
         }
     }
+    private func providerLabel(_ value: String) -> String { ["ATHLINKS": "Athlinks", "RUNSIGNUP": "RunSignup", "RACEROSTER": "Race Roster"][value] ?? value }
     private func search() async { isSearching = true; defer { isSearching = false }; do { candidates = try await service.discoverResults(provider: provider, raceId: raceId.isEmpty ? nil : raceId, eventId: eventId.isEmpty ? nil : eventId) } catch { message = error.localizedDescription } }
 }
 
