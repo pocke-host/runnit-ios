@@ -20,6 +20,15 @@ struct IntegrationCenterView: View {
         .listStyle(.insetGrouped).scrollContentBackground(.hidden).background(RunnitTheme.canvas)
         .navigationTitle("Integrations")
         .task { await service.refresh() }
+        .onReceive(NotificationCenter.default.publisher(for: .oauthCallbackCompleted)) { note in
+            let provider = note.userInfo?["provider"] as? String ?? "provider"
+            message = "(provider.capitalized) connected."
+            Task { await service.refresh() }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .oauthCallbackFailed)) { note in
+            let reason = note.userInfo?["reason"] as? String ?? "The provider did not complete authorization."
+            message = "Connection failed: (reason)"
+        }
         .alert("Integrations", isPresented: .init(get: { message != nil }, set: { _ in message = nil })) { Button("OK", role: .cancel) {} } message: { Text(message ?? "") }
     }
 
