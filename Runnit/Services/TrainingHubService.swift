@@ -47,6 +47,32 @@ struct OfficialResultCandidate: Codable, Identifiable {
     var id: String { "\(provider)-\(externalResultId)" }
 }
 
+struct SpotifySummaryTrack: Codable, Identifiable {
+    let track: String
+    let plays: Int
+    var id: String { track }
+}
+
+struct SpotifySummaryArtist: Codable, Identifiable {
+    let artist: String
+    let plays: Int
+    var id: String { artist }
+}
+
+struct SpotifyListeningSummary: Codable {
+    let period: String
+    let activitiesWithListening: Int
+    let uniqueTracks: Int
+    let workoutMinutes: Int
+    let topTracks: [SpotifySummaryTrack]
+    let topArtists: [SpotifySummaryArtist]
+}
+
+struct SpotifyPlaylistResult: Codable {
+    let id: String?
+    let name: String?
+}
+
 struct RaceListing: Decodable, Identifiable {
     let id: String
     let name: String
@@ -146,6 +172,11 @@ final class TrainingHubService: ObservableObject {
         bookmarks = try await b; results = try await r
     }
     func fetchResultProviders() async throws -> [String] { try await api.request("/race-results/providers") }
+    func fetchSpotifySummary(period: String) async throws -> SpotifyListeningSummary { try await api.request("/spotify/listening-summary?period=\(period)") }
+    func createSpotifyPlaylist(period: String) async throws -> SpotifyPlaylistResult {
+        struct Body: Encodable { let period: String }
+        return try await api.request("/spotify/playlists/from-history", method: "POST", body: Body(period: period))
+    }
     func discoverResults(provider: String, raceId: String?, eventId: String?) async throws -> [OfficialResultCandidate] {
         var path = "/race-results/discover?provider=\(provider)"
         if let raceId, !raceId.isEmpty { path += "&raceId=\(raceId)" }
