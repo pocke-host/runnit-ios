@@ -9,6 +9,8 @@ struct CreateMomentView: View {
     @State private var songTitle = ""
     @State private var songArtist = ""
     @State private var songLink = ""
+    @State private var selectedTrack: SpotifyTrack?
+    @State private var showSpotifyPicker = false
     @State private var selectedActivityId: Int?
     @State private var recentActivities: [Activity] = []
     @State private var isPosting = false
@@ -54,7 +56,19 @@ struct CreateMomentView: View {
                                         .foregroundStyle(.secondary)
                                 }
                             }
-                            // TODO: replace with SpotifyPickerView once Spotify integration is complete
+                            Button {
+                                showSpotifyPicker = true
+                            } label: {
+                                Label(selectedTrack == nil ? "Choose from Spotify" : "Change Spotify track", systemImage: "music.note.list")
+                                    .font(.system(size: 13, weight: .semibold))
+                                    .foregroundStyle(RunnitTheme.signal)
+                            }
+                            .buttonStyle(.plain)
+                            if let selectedTrack {
+                                Text("Linked: \(selectedTrack.name) · \(selectedTrack.artist)")
+                                    .font(.system(size: 12))
+                                    .foregroundStyle(RunnitTheme.muted)
+                            }
                         }
 
                         Divider()
@@ -121,6 +135,9 @@ struct CreateMomentView: View {
                     Button("Cancel") { dismiss() }
                 }
             }
+            .sheet(isPresented: $showSpotifyPicker) {
+                SpotifyPickerView(selectedTrack: $selectedTrack)
+            }
             .task { await loadRecentActivities() }
             .alert("Error", isPresented: .init(get: { errorMessage != nil }, set: { _ in errorMessage = nil })) {
                 Button("OK", role: .cancel) {}
@@ -155,9 +172,9 @@ struct CreateMomentView: View {
                     body: Body(
                         photoUrl: photoUrl,
                         caption: caption,
-                        songTitle: songTitle.isEmpty ? nil : songTitle,
-                        songArtist: songArtist.isEmpty ? nil : songArtist,
-                        songLink: songLink.isEmpty ? nil : songLink,
+                        songTitle: selectedTrack?.name ?? (songTitle.isEmpty ? nil : songTitle),
+                        songArtist: selectedTrack?.artist ?? (songArtist.isEmpty ? nil : songArtist),
+                        songLink: selectedTrack?.externalUrl ?? (songLink.isEmpty ? nil : songLink),
                         activityId: selectedActivityId
                     )
                 )

@@ -53,7 +53,6 @@
 		C4830F9C350F022F1CDC5B23 /* EventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4D6B1251189A10E2103025 /* EventsView.swift */; };
 		C788C1D90E958BA392BCF4F7 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 032316396456C388EC291944 /* PaywallView.swift */; };
 		C93160547C3E1D8C46BB0374 /* SpotifySearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E036AE4694F848B1B9A1B831 /* SpotifySearchService.swift */; };
-		CFA49B9091C3E84695E8C6E6 /* StravaService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0F114BAE53411316BEC8B2 /* StravaService.swift */; };
 		D92B822446224DD16B5110DD /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59A878D595112417D9CF7644 /* ProfileView.swift */; };
 		E162016A42053494638F1C04 /* CommentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC4E4156966CD6293F7B7C3 /* CommentService.swift */; };
 		E6E61705F5EF0CFD6FA3473D /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CF35940A4E1C3C56D0AD87A /* KeychainHelper.swift */; };
@@ -115,7 +114,6 @@
 		D03007A321293F3231A36E42 /* TrainingFoldersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingFoldersView.swift; sourceTree = "<group>"; };
 		D4CCA5AFFD43C0F61EDF44BC /* ClubDiscoveryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClubDiscoveryView.swift; sourceTree = "<group>"; };
 		D689A91C15E934948AE759CC /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
-		DC0F114BAE53411316BEC8B2 /* StravaService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StravaService.swift; sourceTree = "<group>"; };
 		DE219DE7A8ABD35E722DA6E6 /* Plan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plan.swift; sourceTree = "<group>"; };
 		E036AE4694F848B1B9A1B831 /* SpotifySearchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifySearchService.swift; sourceTree = "<group>"; };
 		ED6E44803450DF0220A8983D /* StrengthJournalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrengthJournalView.swift; sourceTree = "<group>"; };
@@ -274,7 +272,6 @@
 				41DFCB749CA0F40F6CC92CEB /* PurchaseService.swift */,
 				78A887341DAA0BE121701A37 /* PushNotificationService.swift */,
 				E036AE4694F848B1B9A1B831 /* SpotifySearchService.swift */,
-				DC0F114BAE53411316BEC8B2 /* StravaService.swift */,
 				37701721F1976827BA00398C /* TrainingHubService.swift */,
 				60143D92721745AA366E3544 /* UserService.swift */,
 			);
@@ -512,7 +509,6 @@
 				875C34BADD27269975274372 /* SplashView.swift in Sources */,
 				30D1F1B46A6511CC33674B09 /* SpotifyPickerView.swift in Sources */,
 				C93160547C3E1D8C46BB0374 /* SpotifySearchService.swift in Sources */,
-				CFA49B9091C3E84695E8C6E6 /* StravaService.swift in Sources */,
 				F582CDECBA83C51D2655C118 /* StrengthJournalView.swift in Sources */,
 				6A131FD3BC1E849250B0B394 /* TrackView.swift in Sources */,
 				8C69785BFE33B8F8C9447D60 /* TrainingFoldersView.swift in Sources */,
