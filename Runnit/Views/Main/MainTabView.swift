@@ -38,6 +38,22 @@ struct MainTabView: View {
             appearance.configureWithOpaqueBackground()
             appearance.backgroundColor = UIColor(RunnitTheme.canvas)
             appearance.shadowColor = UIColor(RunnitTheme.rule)
+
+            let itemAppearance = UITabBarItemAppearance()
+            itemAppearance.normal.iconColor = UIColor(RunnitTheme.muted)
+            itemAppearance.normal.titleTextAttributes = [
+                .font: UIFont.monospacedSystemFont(ofSize: 9, weight: .bold),
+                .foregroundColor: UIColor(RunnitTheme.muted)
+            ]
+            itemAppearance.selected.iconColor = UIColor(RunnitTheme.signal)
+            itemAppearance.selected.titleTextAttributes = [
+                .font: UIFont.monospacedSystemFont(ofSize: 9, weight: .bold),
+                .foregroundColor: UIColor(RunnitTheme.signal)
+            ]
+            appearance.stackedLayoutAppearance = itemAppearance
+            appearance.inlineLayoutAppearance = itemAppearance
+            appearance.compactInlineLayoutAppearance = itemAppearance
+
             UITabBar.appearance().standardAppearance = appearance
             UITabBar.appearance().scrollEdgeAppearance = appearance
         }
