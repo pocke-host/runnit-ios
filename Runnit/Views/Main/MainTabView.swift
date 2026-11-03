@@ -96,6 +96,8 @@ private struct TrainingTabView: View {
     @StateObject private var integrationService = IntegrationService.shared
     @State private var weeklySummary: WeeklyExerciseSummary?
     @State private var weeklySummaryFailed = false
+    @State private var todayWellness: TodayWellnessSummary?
+    @State private var trainingLoad: TrainingLoadSummary?
 
     var body: some View {
         NavigationStack {
@@ -103,6 +105,7 @@ private struct TrainingTabView: View {
                 VStack(alignment: .leading, spacing: 20) {
                     homeHero
                     weeklyExerciseCard
+                    trainingStatusCard
                     dailyFocus
                     VStack(alignment: .leading, spacing: 8) {
                         RunnitSectionLabel(text: "YOUR TRAINING")
@@ -205,14 +208,151 @@ private struct TrainingTabView: View {
                     async let activities: Void = activityService.fetchMyActivities()
                     async let summary = activityService.fetchWeeklySummary()
                     async let integrations: Void = integrationService.refresh()
+                    async let wellness: TodayWellnessSummary? = try? activityService.fetchTodayWellness()
+                    async let load: TrainingLoadSummary? = try? activityService.fetchTrainingLoad()
                     _ = try await activities
                     weeklySummary = try await summary
+                    todayWellness = await wellness
+                    trainingLoad = await load
                     _ = await integrations
                 } catch {
                     weeklySummaryFailed = true
                 }
             }
         }
+    }
+
+    private var trainingStatusCard: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(alignment: .firstTextBaseline) {
+                VStack(alignment: .leading, spacing: 4) {
+                    RunnitSectionLabel(text: "TRAINING STATUS")
+                    Text("The numbers behind your next move.")
+                        .font(.system(size: 18, weight: .black, design: .rounded))
+                        .foregroundStyle(.white)
+                }
+                Spacer()
+                Text(integrationFreshnessLabel ?? "RUNNIT DATA")
+                    .font(.system(size: 8, weight: .bold, design: .monospaced))
+                    .tracking(0.6)
+                    .foregroundStyle(RunnitTheme.canvas.opacity(0.55))
+                    .multilineTextAlignment(.trailing)
+            }
+
+            LazyVGrid(columns: [GridItem(.flexible(), alignment: .leading), GridItem(.flexible(), alignment: .leading)], spacing: 1) {
+                trainingStatusMetric(label: "RECOVERY", value: recoveryStatusValue, detail: recoveryStatusDetail)
+                trainingStatusMetric(label: "TRAINING LOAD", value: loadStatusValue, detail: loadStatusDetail)
+                trainingStatusMetric(label: "THIS WEEK", value: weeklySummary?.formattedTotal ?? "—", detail: weeklyStatusDetail)
+                trainingStatusMetric(label: "PLANNED", value: plannedStatusValue, detail: plannedStatusDetail)
+            }
+            .padding(.vertical, 1)
+            .background(RunnitTheme.canvas.opacity(0.14))
+
+            VStack(alignment: .leading, spacing: 5) {
+                Text("RUNNIT READ")
+                    .font(.system(size: 9, weight: .bold, design: .monospaced))
+                    .tracking(1.2)
+                    .foregroundStyle(RunnitTheme.yellow)
+                Text(trainingRecommendationTitle)
+                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .foregroundStyle(.white)
+                Text(trainingRecommendationMessage)
+                    .font(.system(size: 12))
+                    .foregroundStyle(RunnitTheme.canvas.opacity(0.7))
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            NavigationLink("SEE YOUR WEEK →", destination: FeedView())
+                .font(.system(size: 9, weight: .bold, design: .monospaced))
+                .tracking(0.8)
+                .foregroundStyle(RunnitTheme.yellow)
+        }
+        .padding(18)
+        .background(RunnitTheme.ink)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Training status. \(trainingRecommendationTitle) \(trainingRecommendationMessage)")
+    }
+
+    @ViewBuilder
+    private func trainingStatusMetric(label: String, value: String, detail: String) -> some View {
+        VStack(alignment: .leading, spacing: 5) {
+            Text(label)
+                .font(.system(size: 8, weight: .bold, design: .monospaced))
+                .tracking(0.8)
+                .foregroundStyle(RunnitTheme.canvas.opacity(0.5))
+            Text(value)
+                .font(.system(size: 18, weight: .black, design: .rounded))
+                .foregroundStyle(.white)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+            Text(detail)
+                .font(.system(size: 10, weight: .medium, design: .monospaced))
+                .foregroundStyle(RunnitTheme.canvas.opacity(0.65))
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.vertical, 12)
+        .padding(.horizontal, 10)
+        .background(RunnitTheme.ink)
+    }
+
+    private var recoveryStatusValue: String {
+        guard let score = todayWellness?.recoveryScore else { return "—" }
+        return "\(score)/100"
+    }
+
+    private var recoveryStatusDetail: String {
+        guard let wellness = todayWellness else { return "Connect a wearable" }
+        return wellness.source ?? "Wellness signal"
+    }
+
+    private var loadStatusValue: String {
+        guard let load = trainingLoad, load.hasEnoughData != false else { return "BASELINE" }
+        switch load.riskLabel {
+        case "HIGH_RISK": return "HIGH RISK"
+        case "DETRAINING": return "LOW LOAD"
+        case "OPTIMAL": return "ON TRACK"
+        default: return "—"
+        }
+    }
+
+    private var loadStatusDetail: String {
+        guard let tsb = trainingLoad?.tsb else { return "Need 3 activities" }
+        return "Form \(tsb > 0 ? "+" : "")\(String(format: "%.1f", tsb))"
+    }
+
+    private var weeklyStatusDetail: String {
+        let count = weeklySummary?.activityCount ?? 0
+        return "\(count) session\(count == 1 ? "" : "s")"
+    }
+
+    private var plannedStatusValue: String {
+        guard let summary = weeklySummary, let planned = summary.plannedDurationMinutes, planned > 0 else { return "—" }
+        return "\(summary.completedPlannedDurationMinutes ?? 0)m"
+    }
+
+    private var plannedStatusDetail: String {
+        guard let planned = weeklySummary?.plannedDurationMinutes, planned > 0 else { return "Choose a plan" }
+        return "of \(planned)m planned"
+    }
+
+    private var trainingRecommendationTitle: String {
+        if integrationService.statuses.values.contains(where: { $0.needsReconnect == true }) { return "Reconnect before you rely on the numbers." }
+        if let recovery = todayWellness?.recoveryScore, recovery < 34 { return "Keep today easy." }
+        if trainingLoad?.riskLabel == "HIGH_RISK" { return "Keep today controlled." }
+        if let recovery = todayWellness?.recoveryScore, recovery >= 67 { return "Good day to build." }
+        if (weeklySummary?.activityCount ?? 0) > 0 { return "Keep the week consistent." }
+        return "Build your baseline."
+    }
+
+    private var trainingRecommendationMessage: String {
+        if integrationService.statuses.values.contains(where: { $0.needsReconnect == true }) { return "A connected source needs attention, so today’s status may be incomplete." }
+        if let recovery = todayWellness?.recoveryScore, recovery < 34 { return "Your recovery signal is low. Favor lighter movement or extra recovery before adding intensity." }
+        if trainingLoad?.riskLabel == "HIGH_RISK" { return "Your recent load is elevated. Favor an easy session or recovery before adding more intensity." }
+        if let recovery = todayWellness?.recoveryScore, recovery >= 67 { return "Your recovery signal supports the planned session. Stay aligned with your training block." }
+        if (weeklySummary?.activityCount ?? 0) > 0 { return "Your recent training is in. Review the week, then decide what supports your goal next." }
+        return "Record an activity or connect a device so RUNNIT can make the next recommendation more personal."
     }
 
     private var weeklyExerciseCard: some View {

@@ -22,6 +22,28 @@ struct WeeklyExerciseSummary: Decodable {
     }
 }
 
+struct TodayWellnessSummary: Decodable {
+    let available: Bool?
+    let source: String?
+    let recoveryScore: Int?
+    let hrvMilli: Double?
+    let restingHeartRate: Int?
+    let sleepPerformancePct: Int?
+    let totalSleepMinutes: Int?
+    let strain: Double?
+    let bodyBattery: Int?
+}
+
+struct TrainingLoadSummary: Decodable {
+    let ctl: Double?
+    let atl: Double?
+    let tsb: Double?
+    let acwr: Double?
+    let riskLabel: String?
+    let fitnessTrend: String?
+    let hasEnoughData: Bool?
+}
+
 struct DailyExerciseSummary: Decodable, Identifiable {
     let date: String
     let durationSeconds: Int
@@ -93,6 +115,14 @@ final class ActivityService: ObservableObject {
         var path = "/activities/summary/weekly?timezone=\(timezone)"
         if let weekStart { path += "&weekStart=\(weekStart)" }
         return try await api.request(path)
+    }
+
+    func fetchTodayWellness() async throws -> TodayWellnessSummary {
+        try await api.request("/wellness/today")
+    }
+
+    func fetchTrainingLoad() async throws -> TrainingLoadSummary {
+        try await api.request("/training-load")
     }
 
     // MARK: - Single activity
