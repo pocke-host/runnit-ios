@@ -248,6 +248,37 @@ private struct TrainingTabView: View {
             .padding(.vertical, 1)
             .background(RunnitTheme.canvas.opacity(0.14))
 
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Text("TRAINING INSIGHTS")
+                        .font(.system(size: 9, weight: .bold, design: .monospaced))
+                        .tracking(1.1)
+                        .foregroundStyle(RunnitTheme.yellow)
+                    Spacer()
+                    Text("BACKEND LOAD")
+                        .font(.system(size: 8, weight: .bold, design: .monospaced))
+                        .foregroundStyle(RunnitTheme.canvas.opacity(0.42))
+                }
+                if let load = trainingLoad, load.hasEnoughData == true {
+                    LazyVGrid(columns: [GridItem(.flexible(), alignment: .leading), GridItem(.flexible(), alignment: .leading)], spacing: 10) {
+                        trainingInsightMetric(label: "FITNESS", value: loadValue(load.ctl), detail: "42D")
+                        trainingInsightMetric(label: "FATIGUE", value: loadValue(load.atl), detail: "7D")
+                        trainingInsightMetric(label: "FORM", value: signedLoadValue(load.tsb), detail: "BALANCE")
+                        trainingInsightMetric(label: "ACWR", value: decimalLoadValue(load.acwr), detail: "RATIO")
+                    }
+                    Text(nativeTrainingInsightSummary(for: load))
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundStyle(RunnitTheme.canvas.opacity(0.68))
+                        .fixedSize(horizontal: false, vertical: true)
+                } else {
+                    Text("Log a few activities and RUNNIT will build a reliable training-load baseline.")
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundStyle(RunnitTheme.canvas.opacity(0.68))
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+            .padding(.top, 4)
+
             VStack(alignment: .leading, spacing: 5) {
                 Text("RUNNIT READ")
                     .font(.system(size: 9, weight: .bold, design: .monospaced))
@@ -295,6 +326,50 @@ private struct TrainingTabView: View {
         .padding(.vertical, 12)
         .padding(.horizontal, 10)
         .background(RunnitTheme.ink)
+    }
+
+    @ViewBuilder
+    private func trainingInsightMetric(label: String, value: String, detail: String) -> some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Text(label)
+                .font(.system(size: 7, weight: .bold, design: .monospaced))
+                .tracking(0.6)
+                .foregroundStyle(RunnitTheme.canvas.opacity(0.48))
+            Text(value)
+                .font(.system(size: 15, weight: .black, design: .rounded))
+                .foregroundStyle(.white)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+            Text(detail)
+                .font(.system(size: 7, weight: .bold, design: .monospaced))
+                .foregroundStyle(RunnitTheme.canvas.opacity(0.42))
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private func loadValue(_ value: Double?) -> String {
+        guard let value else { return "—" }
+        return String(Int(value.rounded()))
+    }
+
+    private func signedLoadValue(_ value: Double?) -> String {
+        guard let value else { return "—" }
+        let rounded = Int(value.rounded())
+        return "\(rounded > 0 ? "+" : "")\(rounded)"
+    }
+
+    private func decimalLoadValue(_ value: Double?) -> String {
+        guard let value else { return "—" }
+        return String(format: "%.2f", value)
+    }
+
+    private func nativeTrainingInsightSummary(for load: TrainingLoadSummary) -> String {
+        switch load.riskLabel {
+        case "HIGH_RISK": return "Your short-term load is rising faster than your baseline. Keep the next session easy."
+        case "DETRAINING": return "Your recent load is light. Add easy, repeatable sessions before chasing intensity."
+        case "OPTIMAL": return "Your recent training is in a manageable range. Keep the week consistent."
+        default: return "Keep logging sessions so RUNNIT can make this read more personal."
+        }
     }
 
     private var recoveryStatusValue: String {
