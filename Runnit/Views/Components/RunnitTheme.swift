@@ -10,6 +10,7 @@ enum RunnitTheme {
     static let rule = Color(red: 0.906, green: 0.875, blue: 0.808) // #E7DFCE
     static let muted = Color(red: 0.38, green: 0.35, blue: 0.31)
     static let success = Color(red: 0.10, green: 0.56, blue: 0.30)
+    static let coral = Color(red: 0.72, green: 0.29, blue: 0.24)
 
     static let pagePadding: CGFloat = 20
     static let cardRadius: CGFloat = 0

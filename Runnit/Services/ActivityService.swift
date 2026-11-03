@@ -22,6 +22,53 @@ struct WeeklyExerciseSummary: Decodable {
     }
 }
 
+struct MonthlyExerciseSummary: Decodable {
+    let monthStart: String
+    let monthEnd: String
+    let previousMonthStart: String
+    let previousMonthEnd: String
+    let monthLabel: String
+    let previousMonthLabel: String
+    let totalDurationSeconds: Int
+    let totalDistanceMeters: Int
+    let activityCount: Int
+    let activeDays: Int
+    let previousTotalDurationSeconds: Int?
+    let previousTotalDistanceMeters: Int?
+    let previousActivityCount: Int?
+    let previousActiveDays: Int?
+    let changePercent: Int?
+    let distanceChangePercent: Int?
+    let activityChangePercent: Int?
+    let activeDaysChangePercent: Int?
+    let bySport: [MonthlySportBreakdown]
+    let previousBySport: [MonthlySportBreakdown]?
+    let bySource: [MonthlySourceBreakdown]
+
+    var formattedTotal: String {
+        let hours = totalDurationSeconds / 3600
+        let minutes = (totalDurationSeconds % 3600) / 60
+        if hours > 0 { return "\(hours)h \(minutes)m" }
+        return "\(minutes)m"
+    }
+}
+
+struct MonthlySportBreakdown: Decodable, Identifiable {
+    let sport: String
+    let durationSeconds: Int
+    let distanceMeters: Int
+    let activityCount: Int
+    var id: String { sport }
+}
+
+struct MonthlySourceBreakdown: Decodable, Identifiable {
+    let source: String
+    let durationSeconds: Int
+    let distanceMeters: Int
+    let activityCount: Int
+    var id: String { source }
+}
+
 struct TodayWellnessSummary: Decodable {
     let available: Bool?
     let source: String?
@@ -114,6 +161,13 @@ final class ActivityService: ObservableObject {
         let timezone = TimeZone.current.identifier.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "UTC"
         var path = "/activities/summary/weekly?timezone=\(timezone)"
         if let weekStart { path += "&weekStart=\(weekStart)" }
+        return try await api.request(path)
+    }
+
+    func fetchMonthlySummary(month: String? = nil) async throws -> MonthlyExerciseSummary {
+        let timezone = TimeZone.current.identifier.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "UTC"
+        var path = "/activities/summary/monthly?timezone=\(timezone)"
+        if let month { path += "&month=\(month)" }
         return try await api.request(path)
     }
 

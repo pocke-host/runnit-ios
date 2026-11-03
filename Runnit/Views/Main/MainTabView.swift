@@ -96,6 +96,7 @@ private struct TrainingTabView: View {
     @StateObject private var integrationService = IntegrationService.shared
     @State private var weeklySummary: WeeklyExerciseSummary?
     @State private var weeklySummaryFailed = false
+    @State private var monthlySummary: MonthlyExerciseSummary?
     @State private var todayWellness: TodayWellnessSummary?
     @State private var trainingLoad: TrainingLoadSummary?
 
@@ -105,6 +106,7 @@ private struct TrainingTabView: View {
                 VStack(alignment: .leading, spacing: 20) {
                     homeHero
                     weeklyExerciseCard
+                    monthlyRecapCard
                     trainingStatusCard
                     dailyFocus
                     VStack(alignment: .leading, spacing: 8) {
@@ -207,11 +209,13 @@ private struct TrainingTabView: View {
                 do {
                     async let activities: Void = activityService.fetchMyActivities()
                     async let summary = activityService.fetchWeeklySummary()
+                    async let monthly: MonthlyExerciseSummary? = try? activityService.fetchMonthlySummary()
                     async let integrations: Void = integrationService.refresh()
                     async let wellness: TodayWellnessSummary? = try? activityService.fetchTodayWellness()
                     async let load: TrainingLoadSummary? = try? activityService.fetchTrainingLoad()
                     _ = try await activities
                     weeklySummary = try await summary
+                    monthlySummary = await monthly
                     todayWellness = await wellness
                     trainingLoad = await load
                     _ = await integrations
@@ -506,6 +510,144 @@ private struct TrainingTabView: View {
         .overlay(Rectangle().stroke(RunnitTheme.rule))
         .accessibilityElement(children: .combine)
         .accessibilityLabel(weeklySummary.map { "This week, \($0.formattedTotal) total exercise across \($0.activityCount) activities" } ?? "Loading this week’s exercise total")
+    }
+
+    private var monthlyRecapCard: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 4) {
+                    RunnitSectionLabel(text: "MONTHLY RECAP")
+                    Text(monthlySummary.map { "\($0.monthLabel) vs \($0.previousMonthLabel)" } ?? "A whole lot of insight")
+                        .font(.system(size: 19, weight: .black, design: .rounded))
+                        .foregroundStyle(RunnitTheme.ink)
+                }
+                Spacer()
+                Text("WHOLE LOT\nOF INSIGHT")
+                    .font(.system(size: 8, weight: .bold, design: .monospaced))
+                    .tracking(0.7)
+                    .multilineTextAlignment(.center)
+                    .foregroundStyle(RunnitTheme.ink)
+                    .padding(7)
+                    .background(RunnitTheme.yellow)
+            }
+
+            if let summary = monthlySummary {
+                HStack(alignment: .bottom) {
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text("TOTAL TRAINING TIME")
+                            .font(.system(size: 8, weight: .bold, design: .monospaced))
+                            .tracking(0.8)
+                            .foregroundStyle(RunnitTheme.muted)
+                        Text(summary.formattedTotal)
+                            .font(.system(size: 36, weight: .black, design: .rounded))
+                            .foregroundStyle(RunnitTheme.ink)
+                    }
+                    Spacer()
+                    Text(monthlyChangeLabel(summary.changePercent))
+                        .font(.system(size: 9, weight: .bold, design: .monospaced))
+                        .foregroundStyle((summary.changePercent ?? 0) < 0 ? RunnitTheme.coral : RunnitTheme.signal)
+                        .multilineTextAlignment(.trailing)
+                }
+                .padding(.vertical, 14)
+                .overlay(alignment: .top) { Rectangle().fill(RunnitTheme.rule).frame(height: 1) }
+                .overlay(alignment: .bottom) { Rectangle().fill(RunnitTheme.rule).frame(height: 1) }
+
+                HStack(spacing: 0) {
+                    monthlyMetric(label: "SESSIONS", value: "\(summary.activityCount)", detail: monthlyChangeLabel(summary.activityChangePercent))
+                    monthlyMetric(label: "DISTANCE", value: shortDistance(summary.totalDistanceMeters), detail: monthlyChangeLabel(summary.distanceChangePercent))
+                    monthlyMetric(label: "ACTIVE DAYS", value: "\(summary.activeDays)", detail: monthlyChangeLabel(summary.activeDaysChangePercent))
+                }
+
+                if !summary.bySport.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("WHERE YOUR TIME WENT")
+                            .font(.system(size: 8, weight: .bold, design: .monospaced))
+                            .tracking(0.8)
+                            .foregroundStyle(RunnitTheme.muted)
+                        Text(summary.bySport.prefix(4).map { "\($0.sport.capitalized) \(shortDuration($0.durationSeconds))" }.joined(separator: "  ·  "))
+                            .font(.system(size: 11, weight: .medium, design: .monospaced))
+                            .foregroundStyle(RunnitTheme.ink)
+                            .lineLimit(2)
+                    }
+                }
+
+                VStack(alignment: .leading, spacing: 5) {
+                    Text("RUNNIT READ")
+                        .font(.system(size: 8, weight: .bold, design: .monospaced))
+                        .tracking(0.8)
+                        .foregroundStyle(RunnitTheme.signal)
+                    Text(monthlyInsightTitle(for: summary))
+                        .font(.system(size: 14, weight: .bold, design: .rounded))
+                        .foregroundStyle(RunnitTheme.ink)
+                    Text(monthlyInsightMessage(for: summary))
+                        .font(.system(size: 12))
+                        .foregroundStyle(RunnitTheme.muted)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .padding(12)
+                .background(RunnitTheme.canvas)
+            } else {
+                Text("Log a few sessions and RUNNIT will compare your completed months here.")
+                    .font(.system(size: 13))
+                    .foregroundStyle(RunnitTheme.muted)
+            }
+        }
+        .padding(18)
+        .background(Color.white)
+        .overlay(Rectangle().stroke(RunnitTheme.rule))
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(monthlySummary.map { "Monthly recap. \($0.monthLabel) compared with \($0.previousMonthLabel). \($0.formattedTotal) across \($0.activityCount) sessions." } ?? "Monthly recap loading")
+    }
+
+    @ViewBuilder
+    private func monthlyMetric(label: String, value: String, detail: String) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(label)
+                .font(.system(size: 8, weight: .bold, design: .monospaced))
+                .tracking(0.7)
+                .foregroundStyle(RunnitTheme.muted)
+            Text(value)
+                .font(.system(size: 16, weight: .black, design: .rounded))
+                .foregroundStyle(RunnitTheme.ink)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+            Text(detail)
+                .font(.system(size: 8, weight: .medium, design: .monospaced))
+                .foregroundStyle(RunnitTheme.muted)
+                .lineLimit(1)
+                .minimumScaleFactor(0.65)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.vertical, 12)
+        .padding(.horizontal, 9)
+        .overlay(alignment: .trailing) { Rectangle().fill(RunnitTheme.rule).frame(width: 1) }
+    }
+
+    private func monthlyChangeLabel(_ percent: Int?) -> String {
+        guard let percent else { return "No prior data" }
+        if percent == 0 { return "Flat vs prior" }
+        return "\(percent > 0 ? "↑" : "↓") \(abs(percent))% vs prior"
+    }
+
+    private func shortDistance(_ meters: Int) -> String {
+        let miles = Double(meters) / 1609.344
+        if miles >= 100 { return "\(Int(miles.rounded())) mi" }
+        return String(format: "%.1f mi", miles)
+    }
+
+    private func monthlyInsightTitle(for summary: MonthlyExerciseSummary) -> String {
+        if summary.activityCount == 0 { return "A clean slate." }
+        if (summary.changePercent ?? 0) >= 10 { return "You built momentum." }
+        if (summary.changePercent ?? 0) <= -10 { return "A lighter month can be useful." }
+        return "You kept the work steady."
+    }
+
+    private func monthlyInsightMessage(for summary: MonthlyExerciseSummary) -> String {
+        if summary.activityCount == 0 { return "Start with one simple workout and let the next month take shape." }
+        let sport = summary.bySport.first?.sport.lowercased() ?? "training"
+        if (summary.changePercent ?? 0) >= 10 { return "You spent more time training than the month before, led by \(sport). Keep the rhythm sustainable." }
+        if (summary.changePercent ?? 0) <= -10 { return "Your training time came down from the month before. Use the context, then choose the next block deliberately." }
+        return "Your month stayed consistent, with \(sport) taking the biggest share of your training time."
     }
 
     private func shortDuration(_ seconds: Int) -> String {
