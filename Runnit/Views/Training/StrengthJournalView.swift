@@ -13,6 +13,12 @@ struct StrengthJournalView: View {
                         HStack { Stat(label: "VOLUME", value: number(volume.totalVolume)); Stat(label: "SESSIONS", value: "\(volume.sessions ?? 0)"); Stat(label: "SETS", value: "\(volume.totalSets ?? 0)") }
                     } else { ProgressView() }
                 }
+                if let read = progressionRead {
+                    Section("PROGRESSION READ") {
+                        Text(read.title).font(.headline)
+                        Text(read.message).font(.subheadline).foregroundStyle(RunnitTheme.muted)
+                    }
+                }
                 Section("EXERCISE") {
                     if service.exercises.isEmpty { Text("Log a strength activity to start your journal.").foregroundStyle(RunnitTheme.muted) }
                     else { Picker("Exercise", selection: $selected) { ForEach(service.exercises, id: \.self) { Text($0).tag($0) } }.onChange(of: selected) { _, value in Task { try? await service.selectExercise(value) } } }
@@ -29,6 +35,15 @@ struct StrengthJournalView: View {
         }
     }
     private func number(_ value: Double?) -> String { guard let value else { return "—" }; return String(format: "%.0f", value) }
+    private var progressionRead: (title: String, message: String)? {
+        guard service.history.count >= 2 else { return nil }
+        let ordered = service.history.sorted { $0.date < $1.date }
+        let current = ordered[ordered.count - 1].volume ?? 0
+        let previous = ordered[ordered.count - 2].volume ?? 0
+        if current > previous { return ("Strength is moving up", "Your latest logged volume is higher than the previous session.") }
+        if current < previous { return ("Hold the line", "Your latest volume is lower; keep the next session controlled and focus on quality.") }
+        return ("Stable output", "Your latest logged volume is holding steady.")
+    }
 }
 
 private struct Stat: View {

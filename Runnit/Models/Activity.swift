@@ -13,6 +13,9 @@ struct Activity: Decodable, Identifiable {
     let durationSeconds: Int?
     let elevationMeters: Double?
     let heartRateAvg: Int?
+    let heartRateMax: Int?
+    let cadenceAvg: Double?
+    let source: String?
     let calories: Int?
     let paceSecondsPerKm: Double?
     let date: Date?
@@ -50,7 +53,7 @@ struct Activity: Decodable, Identifiable {
         case durationSeconds
         case distanceMeters
         case elevationGain
-        case averageHeartRate
+        case averageHeartRate, maxHeartRate, averageCadence, source
         case averagePace
         case createdAt
         case commentCount
@@ -67,6 +70,9 @@ struct Activity: Decodable, Identifiable {
         durationSeconds = try c.decodeIfPresent(Int.self, forKey: .durationSeconds)
         paceSecondsPerKm = try c.decodeIfPresent(Double.self, forKey: .averagePace)
         heartRateAvg    = try c.decodeIfPresent(Int.self, forKey: .averageHeartRate)
+        heartRateMax    = try c.decodeIfPresent(Int.self, forKey: .maxHeartRate)
+        cadenceAvg      = try c.decodeIfPresent(Double.self, forKey: .averageCadence)
+        source          = try c.decodeIfPresent(String.self, forKey: .source)
         userReaction    = try c.decodeIfPresent(String.self, forKey: .userReaction)
         listeningTrack  = try c.decodeIfPresent(String.self, forKey: .listeningTrack)
         listeningArtist = try c.decodeIfPresent(String.self, forKey: .listeningArtist)

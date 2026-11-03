@@ -8,18 +8,18 @@ struct TrainingFoldersView: View {
     var body: some View {
         NavigationStack {
             content
-                .navigationTitle("Training folders")
+                .navigationTitle("Training goals")
                 .toolbar { ToolbarItem(placement: .topBarTrailing) { Button { showingCreate = true } label: { Image(systemName: "plus") } } }
                 .background(RunnitTheme.canvas)
                 .task { do { try await service.fetchFolders() } catch let requestError { error = requestError.localizedDescription } }
                 .sheet(isPresented: $showingCreate) { CreateFolderSheet(service: service) }
-                .alert("Folders", isPresented: .init(get: { error != nil }, set: { _ in error = nil })) { Button("OK", role: .cancel) {} } message: { Text(error ?? "") }
+                .alert("Training goals", isPresented: .init(get: { error != nil }, set: { _ in error = nil })) { Button("OK", role: .cancel) {} } message: { Text(error ?? "") }
         }
     }
 
     @ViewBuilder private var content: some View {
         if service.folders.isEmpty {
-            ContentUnavailableView("Build your training block", systemImage: "folder.badge.plus", description: Text("Create a folder for a race, season, or goal."))
+            ContentUnavailableView("Build your next goal", systemImage: "flag.badge.plus", description: Text("Create a goal for a race, season, or training focus."))
         } else {
             List(service.folders) { folder in
                 NavigationLink(destination: TrainingFolderDetailView(folder: folder)) {
@@ -52,13 +52,13 @@ private struct CreateFolderSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("TRAINING BLOCK") {
+                Section("TRAINING GOAL") {
                     TextField("London Marathon", text: $name)
                     TextField("Spring build", text: $description)
                     DatePicker("Target date", selection: $target, displayedComponents: .date)
                 }
             }
-            .navigationTitle("New folder")
+            .navigationTitle("New goal")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                 ToolbarItem(placement: .confirmationAction) {
@@ -103,12 +103,12 @@ struct TrainingFolderDetailView: View {
             }
         }
         .listStyle(.insetGrouped).scrollContentBackground(.hidden).background(RunnitTheme.canvas)
-        .navigationTitle("Folder").navigationBarTitleDisplayMode(.inline)
+        .navigationTitle("Goal").navigationBarTitleDisplayMode(.inline)
         .toolbar { ToolbarItem(placement: .topBarTrailing) { Button("Edit") { editing = true } } }
         .task { do { try await ActivityService.shared.fetchMyActivities(); activities = ActivityService.shared.myActivities } catch let requestError { error = requestError.localizedDescription } }
         .task { try? await planService.fetchPlans() }
         .sheet(isPresented: $editing) { FolderEditSheet(service: service, folder: folder) }
-        .alert("Folder", isPresented: .init(get: { error != nil }, set: { _ in error = nil })) { Button("OK", role: .cancel) {} } message: { Text(error ?? "") }
+        .alert("Goal", isPresented: .init(get: { error != nil }, set: { _ in error = nil })) { Button("OK", role: .cancel) {} } message: { Text(error ?? "") }
     }
 }
 

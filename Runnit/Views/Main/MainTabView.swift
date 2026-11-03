@@ -138,7 +138,7 @@ private struct TrainingTabView: View {
                     }
 
                     TrainingHubLink(
-                        title: "Training folders",
+                        title: "Training goals",
                         subtitle: "Group every workout around a race or season.",
                         icon: "folder",
                         tint: RunnitTheme.yellow

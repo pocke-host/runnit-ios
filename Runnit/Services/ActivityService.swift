@@ -176,7 +176,8 @@ final class ActivityService: ObservableObject {
     }
 
     func fetchTrainingLoad() async throws -> TrainingLoadSummary {
-        try await api.request("/training-load")
+        let timezone = TimeZone.current.identifier.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "UTC"
+        return try await api.request("/training-load?timezone=\(timezone)")
     }
 
     // MARK: - Single activity

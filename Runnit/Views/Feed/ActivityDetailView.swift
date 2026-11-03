@@ -64,6 +64,12 @@ struct ActivityDetailView: View {
                                 if let hr = a.heartRateAvg {
                                     BigStat(label: "Avg HR", value: "\(hr)", unit: "bpm")
                                 }
+                                if let maxHr = a.heartRateMax {
+                                    BigStat(label: "Max HR", value: "\(maxHr)", unit: "bpm")
+                                }
+                                if let cadence = a.cadenceAvg {
+                                    BigStat(label: "Cadence", value: String(format: "%.0f", cadence), unit: a.activityType.uppercased() == "BIKE" ? "rpm" : "spm")
+                                }
                                 if let cal = a.calories {
                                     BigStat(label: "Calories", value: "\(cal)", unit: "kcal")
                                 }
