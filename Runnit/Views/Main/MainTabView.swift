@@ -21,7 +21,7 @@ struct MainTabView: View {
                 .tag(1)
 
             TrackView()
-                .tabItem { Label("Track", systemImage: "record.circle") }
+                .tabItem { Label("Record", systemImage: "record.circle") }
                 .tag(2)
 
             NativeCalendarView()
@@ -71,7 +71,7 @@ struct MainTabView: View {
                     .shadow(color: RunnitTheme.ink.opacity(0.28), radius: 6, y: 3)
             }
             .buttonStyle(.plain)
-            .accessibilityLabel("Track activity")
+            .accessibilityLabel("Record activity")
             .offset(y: -24)
         }
         .confirmationDialog("Create", isPresented: $showCreateSheet) {
