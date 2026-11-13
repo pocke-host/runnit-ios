@@ -106,7 +106,7 @@ private struct HealthStatusRow: View {
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: "heart.text.square").frame(width: 28).foregroundStyle(.red)
-            VStack(alignment: .leading, spacing: 3) { Text("Apple Health").font(.headline); Text(service.status?.connected == true ? "Connected" : "Not connected").font(.caption).foregroundStyle(service.status?.connected == true ? .green : RunnitTheme.muted) }
+            VStack(alignment: .leading, spacing: 3) { Text("Apple Health").font(.headline); Text(service.status?.connected == true ? (service.automaticSyncEnabled ? "Connected · Syncs automatically" : "Connected") : "Not connected").font(.caption).foregroundStyle(service.status?.connected == true ? .green : RunnitTheme.muted) }
             Spacer()
             Button(service.status?.connected == true ? "Sync" : "Connect") { Task { do { message = "Imported \(try await (service.status?.connected == true ? service.syncRecentWorkouts() : service.connectAndSync())) workouts." } catch { message = error.localizedDescription } } }.buttonStyle(.borderedProminent).tint(RunnitTheme.signal)
         }.task { await service.fetchStatus() }.alert("Apple Health", isPresented: .init(get: { message != nil }, set: { _ in message = nil })) { Button("OK", role: .cancel) {} } message: { Text(message ?? "") }

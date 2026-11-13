@@ -13,6 +13,11 @@ struct RunnitApp: App {
     init() {
         let rcKey = Bundle.main.object(forInfoDictionaryKey: "REVENUECAT_API_KEY") as? String ?? ""
         PurchaseService.configure(apiKey: rcKey)
+        // Register HealthKit's observer as early as possible so Apple Watch
+        // workouts can wake the app even when the UI is not open.
+        Task { @MainActor in
+            HealthKitService.shared.startAutomaticSync()
+        }
     }
 
     var body: some Scene {
@@ -24,14 +29,24 @@ struct RunnitApp: App {
                     DeepLinkHandler.handle(url)
                 }
                 .task {
+                    HealthKitService.shared.startAutomaticSync()
                     if auth.isLoggedIn {
                         await push.requestPermission()
+                        await HealthKitService.shared.fetchStatus()
+                        if HealthKitService.shared.status?.connected == true {
+                            try? await HealthKitService.shared.syncNewWorkouts()
+                        }
                     }
                 }
                 .onChange(of: auth.isLoggedIn) { _, loggedIn in
                     if loggedIn {
                         Task {
                             await push.requestPermission()
+                            HealthKitService.shared.startAutomaticSync()
+                            await HealthKitService.shared.fetchStatus()
+                            if HealthKitService.shared.status?.connected == true {
+                                try? await HealthKitService.shared.syncNewWorkouts()
+                            }
                             if let userId = auth.currentUser.map({ String($0.id) }) {
                                 await purchases.login(userId: userId)
                             }
@@ -45,6 +60,11 @@ struct RunnitApp: App {
                         Task {
                             await CorosService.shared.fetchStatus()
                             await purchases.refreshCustomerInfo()
+                            HealthKitService.shared.startAutomaticSync()
+                            await HealthKitService.shared.fetchStatus()
+                            if HealthKitService.shared.status?.connected == true {
+                                try? await HealthKitService.shared.syncNewWorkouts()
+                            }
                         }
                     }
                 }

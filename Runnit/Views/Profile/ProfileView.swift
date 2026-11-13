@@ -274,7 +274,9 @@ struct AppleHealthRow: View {
             Image(systemName: "heart.fill").font(.system(size: 18)).foregroundStyle(.red).frame(width: 32)
             VStack(alignment: .leading, spacing: 2) {
                 Text("Apple Health").font(.system(size: 15, weight: .semibold))
-                Text(healthKit.status?.connected == true ? "Connected" : "Not connected")
+                Text(healthKit.status?.connected == true
+                     ? (healthKit.automaticSyncEnabled ? "Connected · Syncs automatically" : "Connected")
+                     : "Not connected")
                     .font(.system(size: 12)).foregroundStyle(healthKit.status?.connected == true ? Color.green : Color(.systemGray))
             }
             Spacer()
