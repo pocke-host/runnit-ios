@@ -91,6 +91,46 @@ struct TrainingLoadSummary: Decodable {
     let hasEnoughData: Bool?
 }
 
+struct AthleteReadResponse: Decodable {
+    let generatedAt: String
+    let available: Bool
+    let windowDays: Int
+    let primary: AthleteInsight
+    let insights: [AthleteInsight]
+    let dataQuality: AthleteDataQuality
+    let sources: [String]
+}
+
+struct AthleteInsight: Decodable, Identifiable {
+    let key: String
+    let category: String
+    let severity: String
+    let priority: Int
+    let title: String
+    let message: String
+    let action: String
+    let evidence: [AthleteInsightEvidence]
+    let confidence: String
+    let sampleSize: Int
+
+    var id: String { key }
+}
+
+struct AthleteInsightEvidence: Decodable, Identifiable {
+    let label: String
+    let value: String
+
+    var id: String { label }
+}
+
+struct AthleteDataQuality: Decodable {
+    let activityCount: Int
+    let wellnessDays: Int
+    let latestWellnessDate: String?
+    let latestWellnessSource: String?
+    let hasPersonalBaseline: Bool
+}
+
 struct DailyExerciseSummary: Decodable, Identifiable {
     let date: String
     let durationSeconds: Int
@@ -178,6 +218,11 @@ final class ActivityService: ObservableObject {
     func fetchTrainingLoad() async throws -> TrainingLoadSummary {
         let timezone = TimeZone.current.identifier.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "UTC"
         return try await api.request("/training-load?timezone=\(timezone)")
+    }
+
+    func fetchAthleteRead() async throws -> AthleteReadResponse {
+        let timezone = TimeZone.current.identifier.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "UTC"
+        return try await api.request("/wellness/read?timezone=\(timezone)")
     }
 
     // MARK: - Single activity

@@ -99,6 +99,7 @@ private struct TrainingTabView: View {
     @State private var monthlySummary: MonthlyExerciseSummary?
     @State private var todayWellness: TodayWellnessSummary?
     @State private var trainingLoad: TrainingLoadSummary?
+    @State private var athleteRead: AthleteReadResponse?
 
     var body: some View {
         NavigationStack {
@@ -213,11 +214,13 @@ private struct TrainingTabView: View {
                     async let integrations: Void = integrationService.refresh()
                     async let wellness: TodayWellnessSummary? = try? activityService.fetchTodayWellness()
                     async let load: TrainingLoadSummary? = try? activityService.fetchTrainingLoad()
+                    async let read: AthleteReadResponse? = try? activityService.fetchAthleteRead()
                     _ = try await activities
                     weeklySummary = try await summary
                     monthlySummary = await monthly
                     todayWellness = await wellness
                     trainingLoad = await load
+                    athleteRead = await read
                     _ = await integrations
                 } catch {
                     weeklySummaryFailed = true
@@ -283,19 +286,7 @@ private struct TrainingTabView: View {
             }
             .padding(.top, 4)
 
-            VStack(alignment: .leading, spacing: 5) {
-                Text("RUNNIT READ")
-                    .font(.system(size: 9, weight: .bold, design: .monospaced))
-                    .tracking(1.2)
-                    .foregroundStyle(RunnitTheme.yellow)
-                Text(trainingRecommendationTitle)
-                    .font(.system(size: 15, weight: .bold, design: .rounded))
-                    .foregroundStyle(.white)
-                Text(trainingRecommendationMessage)
-                    .font(.system(size: 12))
-                    .foregroundStyle(RunnitTheme.canvas.opacity(0.7))
-                    .fixedSize(horizontal: false, vertical: true)
-            }
+            athleteReadSection
 
             NavigationLink("SEE YOUR WEEK →", destination: FeedView())
                 .font(.system(size: 9, weight: .bold, design: .monospaced))
@@ -306,6 +297,52 @@ private struct TrainingTabView: View {
         .background(RunnitTheme.ink)
         .accessibilityElement(children: .combine)
         .accessibilityLabel("Training status. \(trainingRecommendationTitle) \(trainingRecommendationMessage)")
+    }
+
+    @ViewBuilder
+    private var athleteReadSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("RUNNIT READ")
+                .font(.system(size: 9, weight: .bold, design: .monospaced))
+                .tracking(1.2)
+                .foregroundStyle(RunnitTheme.yellow)
+
+            if let read = athleteRead {
+                Text(read.primary.title)
+                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .foregroundStyle(.white)
+                Text(read.primary.message)
+                    .font(.system(size: 12))
+                    .foregroundStyle(RunnitTheme.canvas.opacity(0.7))
+                    .fixedSize(horizontal: false, vertical: true)
+                HStack(spacing: 8) {
+                    Text(read.primary.action)
+                    Text("•")
+                    Text("\(read.primary.confidence.capitalized) confidence")
+                }
+                .font(.system(size: 9, weight: .bold, design: .monospaced))
+                .foregroundStyle(RunnitTheme.yellow)
+
+                ForEach(read.primary.evidence) { item in
+                    HStack {
+                        Text(item.label)
+                            .foregroundStyle(RunnitTheme.canvas.opacity(0.5))
+                        Spacer()
+                        Text(item.value)
+                            .foregroundStyle(.white)
+                    }
+                    .font(.system(size: 10, weight: .medium, design: .monospaced))
+                }
+            } else {
+                Text(trainingRecommendationTitle)
+                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .foregroundStyle(.white)
+                Text(trainingRecommendationMessage)
+                    .font(.system(size: 12))
+                    .foregroundStyle(RunnitTheme.canvas.opacity(0.7))
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
     }
 
     @ViewBuilder
