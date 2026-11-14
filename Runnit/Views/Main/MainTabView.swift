@@ -106,10 +106,10 @@ private struct TrainingTabView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     homeHero
-                    weeklyExerciseCard
-                    monthlyRecapCard
-                    trainingStatusCard
                     dailyFocus
+                    weeklyExerciseCard
+                    trainingStatusCard
+                    monthlyRecapCard
                     VStack(alignment: .leading, spacing: 8) {
                         RunnitSectionLabel(text: "YOUR TRAINING")
                         Text("Build the block.")
